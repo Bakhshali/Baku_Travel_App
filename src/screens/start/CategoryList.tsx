@@ -1,5 +1,7 @@
-import { View, Text, FlatList, Image, Dimensions, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useContext, useState } from 'react'
+import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FirstLoginContext } from '../../context/FirstLogin'
+import { saveUserCategories } from '../../helpers/userCategoies'
 
 const data = [
   {
@@ -44,14 +46,49 @@ const data = [
   }
 ]
 
-export default function CategoryList() {
+export default function CategoryList({navigation}: any) {
+
+  const [category, setCategory] = useState<any>([])
+  const { firstLogin, setFirstLogin } = useContext(FirstLoginContext);
+
+  const addToFavoriteCategory = (item: any) => {
+    const isExistCategory = category.find((e: any) => e.id == item.id)
+    if (!isExistCategory) {
+      setCategory([...category, item])
+    } else {
+      const otherProduct = category.filter((e: any) => e.id !== item.id)
+      setCategory(otherProduct)
+    }
+  }
+
+  const next = () => {
+    if (category.length > 0) {
+        saveUserCategories(category)
+            .then(res => {
+                setFirstLogin(false)
+            })
+    }
+    else {
+        setFirstLogin(true)
+    }
+
+}
 
   const renderItem = ({ item }: any) => {
+    const isExistCategory = category.find((e: any) => e.id == item.id)
+    if (isExistCategory) {
+      return (
+        <TouchableOpacity style={[styles.item, {borderColor: 'white',}]} onPress={() => addToFavoriteCategory(item)}>
+          <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
+          <Text style={styles.itemText}>{item.name}</Text>
+        </TouchableOpacity>
+      )
+    }
     return (
-      <View style={styles.item}>
-        <Image style={{width: 36, height: 44, marginBottom: 12}} source={item.image} />
-        <Text style={styles.itemText}>{item.name}</Text>
-      </View>
+      <TouchableOpacity style={[styles.item, {borderColor: '#494949',}]} onPress={() => addToFavoriteCategory(item)}>
+      <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
+      <Text style={styles.itemText}>{item.name}</Text>
+    </TouchableOpacity>
     )
   }
 
@@ -67,9 +104,13 @@ export default function CategoryList() {
           data={data}
           style={styles.container}
           renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
           numColumns={2}
         />
       </View>
+      <TouchableOpacity style={styles.btn} onPress={next}>
+        <Text style={styles.btnText}>Next</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -77,11 +118,11 @@ export default function CategoryList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 15,
+    marginTop: 12,
+    marginBottom: 12
   },
   item: {
     borderWidth: 1,
-    borderColor: '#494949',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -94,6 +135,21 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#fff',
+    fontSize: 15,
     fontFamily: 'Outfit-Regular'
   },
+  btn: {
+    backgroundColor: '#018CF1',
+    marginHorizontal: 16,
+    marginBottom: 46,
+    borderRadius: 8,
+
+  },
+  btnText: {
+    marginVertical: 16,
+    fontFamily: 'Outfit-Regular',
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+  }
 })
