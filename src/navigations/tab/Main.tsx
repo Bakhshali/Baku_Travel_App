@@ -47,6 +47,9 @@ export default function Main() {
                 tabBarIcon: ({ focused }) => (
                     <SvgSave style={{
                         stroke: focused ? "#E0783E" : "#494949",
+                        width:28,
+                        height:28,
+                        fill:"none"
                     }} />
                 )
             }} />
@@ -56,6 +59,6 @@ export default function Main() {
 
 const styles = StyleSheet.create({
     mainIcons: {
-
+        
     }
 })

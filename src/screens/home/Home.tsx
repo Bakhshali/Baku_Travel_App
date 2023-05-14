@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
 import SvgWeather from '../../components/icons/Weather'
 import SvgWatch from '../../components/icons/Watch'
 import SvgStar from '../../components/icons/Star'
-import { TouchableOpacity } from 'react-native/Libraries/Components/Touchable/TouchableOpacity'
+import SvgSave from '../../components/icons/Save'
 
 const product: any = [
   {
@@ -182,14 +182,11 @@ const category: any = [
 ]
 
 export default function Home() {
-
-  // const goToDetail(()=>{
-
-  // })
+  
 
   const renderItem = ({ item }: any) => {
     return (
-
+      <TouchableOpacity>
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
@@ -201,11 +198,11 @@ export default function Home() {
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{item.km}</Text>
+                <Text style={styles.textDetailStyle}>{item.km} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />
-                <Text style={styles.textDetailStyle}>{item.startDate}-{item.endDate}</Text>
+                <Text style={styles.textDetailStyle}>{item.startDate} - {item.endDate}</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgStar />
@@ -213,7 +210,18 @@ export default function Home() {
               </View>
             </View>
           </View>
+          <View style={styles.favorite} >
+            <SvgSave
+              style={{
+                stroke: "white",
+                width: 20,
+                height: 20,
+                fill: "none"
+              }} />
+
+          </View>
         </View>
+      </TouchableOpacity>
     )
   }
   return (
@@ -245,14 +253,25 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+  favorite: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#1C1C1C",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
+    position: "absolute",
+    right: 10,
+    top: 10
+  },
   textDetailStyle: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "500",
     color: "white"
   },
   mainDetail: {
     flexDirection: "row",
-    gap: 20,
+    gap: 30,
     marginTop: 10
   },
   cardDetail: {
@@ -267,10 +286,10 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 20,
     marginTop: 20,
-    width: 270,
+    width: 280,
   },
   imageStyle: {
-    width: 270,
+    width: 280,
     height: 240,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10
