@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
 import SvgWeather from '../../components/icons/Weather'
@@ -10,22 +10,37 @@ import SvgSearch from '../../components/icons/Search'
 import { SearchItem } from '../../components/icons'
 import SvgRestaurant from '../../components/icons/Restaurant'
 import { baseNetwork } from '../../network/Api'
+import { FavoriteCategoryContext } from '../../context/FavoriteCategory'
+import { getUserCategories } from '../../helpers/userCategoies'
 
 export default function Home() {
-  const [restaurant, setRestaurant] = useState([])
+  const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState([])
+  const [defaultFavCategory, setdefaultFavCategory] = useState([])
+
+  const {favoriteCategory, setFavoriteCategory} = useContext(FavoriteCategoryContext)
 
   useEffect(() => {
     const Network = new baseNetwork()
 
     Network.getAllCategory().then(response => setCategory(response))
+    getUserCategories().then(res => setdefaultFavCategory(res))
 
   }, [])
 
   useEffect(() => {
     const Network = new baseNetwork()
+    Network.getAllRestaurant().then((response: []) => {
+        response.forEach((res: any) => {
+        defaultFavCategory.forEach((e: any) => {
+          if (res.categoryId == e.id) {
+              setRestaurant([...restaurant, res])
+          }
+        })
+      })
+    })
+    
 
-    Network.getAllRestaurant().then(response => setRestaurant(response))
 
   }, [])
 
@@ -34,8 +49,16 @@ export default function Home() {
   }
 
   const renderCategory = ({ item }: any) => {
+    const isExist = defaultFavCategory.find((e: any) => e.id == item.id)
     return (
-      <TouchableOpacity>
+      isExist ? <TouchableOpacity>
+        <View style={{ backgroundColor: '#E0783E' ,marginLeft:20, marginTop: 18, borderWidth:1,borderColor:"#404040", padding: 5 ,borderRadius:7}}>
+          <View style={{ flexDirection: "row", gap: 5,paddingRight:10 }}>
+            <SvgRestaurant />
+            <Text style={{ color: "white" }} >{item.name}</Text>
+          </View>
+        </View>
+      </TouchableOpacity> : <TouchableOpacity>
         <View style={{ marginLeft:20, marginTop: 18, borderWidth:1,borderColor:"#404040", padding: 5 ,borderRadius:7}}>
           <View style={{ flexDirection: "row", gap: 5,paddingRight:10 }}>
             <SvgRestaurant />

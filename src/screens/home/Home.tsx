@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Button, View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, PermissionsAndroid } from 'react-native'
+import React, { useEffect, useState, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
 import SvgWeather from '../../components/icons/Weather'
@@ -8,25 +8,66 @@ import SvgStar from '../../components/icons/Star'
 import SvgSave from '../../components/icons/Save'
 import { baseNetwork } from '../../network/Api'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+import { LatLongContext } from '../../context/UserLocation'
+import Geolocations from 'react-native-geolocation-service'
 
 export default function Home() {
 
+  //   const { latitude, longitude, setlatitude, setlongitude } = useContext(LatLongContext);
+  //   console.log(latitude, longitude)
+
+  //   async function requestLocationPermission() {
+  //     try {
+  //         const granted = await PermissionsAndroid.request(
+  //             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //             {
+  //                 title: "Uygulama Konum Erişimi",
+  //                 message:
+  //                     "Uygulamanın konumunuza erişmesine izin vermeniz gerekiyor",
+  //                 buttonNeutral: "Daha Sonra Sor",
+  //                 buttonNegative: "İptal",
+  //                 buttonPositive: "Tamam"
+  //             }
+  //         );
+  //         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //             Geolocations.getCurrentPosition(
+  //                 position => {
+  //                     console.log(position)
+  //                     setlatitude(position.coords.latitude)
+  //                     setlongitude(position.coords.longitude)
+  //                 },
+  //                 error => {
+  //                     console.log(error.code, error.message);
+  //                 },
+  //                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  //             );
+
+  //         } else {
+  //             console.log("Konum erişim izni reddedildi");
+  //         }
+  //     } catch (err) {
+  //         console.warn(err);
+  //     }
+  // }
+
+
   const [allPalace, setAllPalace] = useState([])
-
   const [restaurant, setRestaurant] = useState<any>([])
-
   const [hotel, sethotel] = useState<any>([])
-  const isFocused = useIsFocused()
-  
+
   useEffect(() => {
     const Network = new baseNetwork()
 
-    Network.getAllRestaurant().then(response => setAllPalace(response))
-    const AllHotel = allPalace.filter((c:any)=>c.categoryId==5)
-    sethotel(AllHotel)
-    
-    const AllRestaurant = allPalace.filter((c:any)=>c.categoryId==1)
-    setRestaurant(AllRestaurant)
+    Network.getAllRestaurant().then(response => {
+      const data = response.filter((c: any) => c.categoryId == 5)
+      sethotel(data)
+    })
+
+    Network.getAllRestaurant().then(response => {
+      const data = response.filter((c: any) => c.categoryId == 1)
+      setRestaurant(data)
+    })
+
   }, [])
 
   const renderItem = ({ item }: any) => {
@@ -84,7 +125,7 @@ export default function Home() {
       </View>
       <ScrollView showsVerticalScrollIndicator={false} >
         <View>
-          <Text style={{marginHorizontal:20,marginTop:10,fontSize:16,color:"white"}}>Restaurant nearby</Text>
+          <Text style={{ marginHorizontal: 20, marginTop: 10, fontSize: 16, color: "white" }}>Restaurant nearby</Text>
           <FlatList
             data={restaurant}
             renderItem={renderItem}
@@ -93,7 +134,7 @@ export default function Home() {
           />
         </View>
         <View>
-        <Text style={{marginHorizontal:20,marginTop:10,fontSize:16,color:"white"}}>Hotel nearby</Text>
+          <Text style={{ marginHorizontal: 20, marginTop: 10, fontSize: 16, color: "white" }}>Hotel nearby</Text>
           <FlatList
             data={hotel}
             renderItem={renderItem}

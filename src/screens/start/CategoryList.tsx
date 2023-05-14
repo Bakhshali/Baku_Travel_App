@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react'
-import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useState, useEffect } from 'react'
+import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View, PermissionsAndroid } from 'react-native'
+import Geolocations from 'react-native-geolocation-service';
 import { FirstLoginContext } from '../../context/FirstLogin'
 import { saveUserCategories } from '../../helpers/userCategoies'
 
@@ -25,31 +26,32 @@ const data = [
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 8,
-    name: 'Restaurant',
+    id: 6,
+    name: 'Hotel',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
     id: 7,
-    name: 'Sight',
+    name: 'Club',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 6,
-    name: 'Shop',
+    id: 8,
+    name: 'Park',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 5,
-    name: 'Museum',
+    id: 9,
+    name: 'Hospital',
     image: require('../../assets/images/onboarding/Hospital.png')
   }
 ]
 
-export default function CategoryList({navigation}: any) {
+export default function CategoryList({ navigation }: any) {
 
   const [category, setCategory] = useState<any>([])
   const { firstLogin, setFirstLogin } = useContext(FirstLoginContext);
+
 
   const addToFavoriteCategory = (item: any) => {
     const isExistCategory = category.find((e: any) => e.id == item.id)
@@ -63,32 +65,33 @@ export default function CategoryList({navigation}: any) {
 
   const next = () => {
     if (category.length > 0) {
-        saveUserCategories(category)
-            .then(res => {
-                setFirstLogin(false)
-            })
+
+      saveUserCategories(category)
+        .then(res => {
+          setFirstLogin(false)
+        })
     }
     else {
-        setFirstLogin(true)
+      setFirstLogin(true)
     }
 
-}
+  }
 
   const renderItem = ({ item }: any) => {
     const isExistCategory = category.find((e: any) => e.id == item.id)
     if (isExistCategory) {
       return (
-        <TouchableOpacity style={[styles.item, {borderColor: 'white',}]} onPress={() => addToFavoriteCategory(item)}>
+        <TouchableOpacity style={[styles.item, { borderColor: 'white', }]} onPress={() => addToFavoriteCategory(item)}>
           <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
           <Text style={styles.itemText}>{item.name}</Text>
         </TouchableOpacity>
       )
     }
     return (
-      <TouchableOpacity style={[styles.item, {borderColor: '#494949',}]} onPress={() => addToFavoriteCategory(item)}>
-      <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
-      <Text style={styles.itemText}>{item.name}</Text>
-    </TouchableOpacity>
+      <TouchableOpacity style={[styles.item, { borderColor: '#494949', }]} onPress={() => addToFavoriteCategory(item)}>
+        <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
+        <Text style={styles.itemText}>{item.name}</Text>
+      </TouchableOpacity>
     )
   }
 
