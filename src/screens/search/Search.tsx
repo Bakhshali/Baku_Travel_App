@@ -9,192 +9,28 @@ import SvgSave from '../../components/icons/Save'
 import SvgSearch from '../../components/icons/Search'
 import { SearchItem } from '../../components/icons'
 import SvgRestaurant from '../../components/icons/Restaurant'
+import { baseNetwork } from '../../network/Api'
 
-const product: any = [
-  {
-    "id": "1",
-    "name": "Center Hotel",
-    "categoryId": "1",
-    "startDate": "09:00",
-    "endDate": "22:00",
-    "phone": "+994 01 234 56 78",
-    "address": "Nizami küçəsi, 203B",
-    "week": "Mon - Fri",
-    "rate": "4.5",
-    "km": 6,
-    "lat": "40.371572",
-    "long": "49.837411",
-    "imageUrl": "https://images.adsttc.com/media/images/5e4c/1025/6ee6/7e0b/9d00/0877/large_jpg/feature_-_Main_hall_1.jpg?1582043123"
-  },
-  {
-    "id": "2",
-    "name": "Shirvanshah Restaurant",
-    "categoryId": "1",
-    "startDate": "09:00",
-    "endDate": "22:00",
-    "phone": "+994 01 234 56 78",
-    "address": "Nizami küçəsi, 203B",
-    "week": "Mon - Fri",
-    "rate": "4.5",
-    "km": 6,
-    "lat": "40.371572",
-    "long": "49.837411",
-    "imageUrl": "https://images.adsttc.com/media/images/5e4c/1025/6ee6/7e0b/9d00/0877/large_jpg/feature_-_Main_hall_1.jpg?1582043123"
-  },
-  // {
-  //   "id": "2",
-  //   "name": "Fairmont Baku, Flame Towers",
-  //   "categoryId": "1",
-  //   "rate": "4.7",
-  //   "lat": "40.366316",
-  //   "long": "49.840805",
-  //   "imageUrl": "https://example.com/fairmont-baku-image.jpg"
-  // },
-  // {
-  //   "id": "3",
-  //   "name": "Hilton Baku",
-  //   "categoryId": "1",
-  //   "rate": "4.4",
-  //   "lat": "40.372045",
-  //   "long": "49.837677",
-  //   "imageUrl": "https://example.com/hilton-baku-image.jpg"
-  // },
-  // {
-  //   "id": "4",
-  //   "name": "Four Seasons Hotel Baku",
-  //   "categoryId": "1",
-  //   "rate": "4.6",
-  //   "lat": "40.366759",
-  //   "long": "49.842233",
-  //   "imageUrl": "https://example.com/four-seasons-baku-image.jpg"
-  // },
-  // {
-  //   "id": "5",
-  //   "name": "JW Marriott Absheron Baku",
-  //   "categoryId": "1",
-  //   "rate": "4.3",
-  //   "lat": "40.370033",
-  //   "long": "49.841015",
-  //   "imageUrl": "https://example.com/jw-marriott-baku-image.jpg"
-  // },
-  // {
-  //   "id": "6",
-  //   "name": "Nizami Restaurant",
-  //   "categoryId": "2",
-  //   "rate": "4.2",
-  //   "lat": "40.365262",
-  //   "long": "49.834723",
-  //   "imageUrl": "https://example.com/nizami-restaurant-image.jpg"
-  // },
-  // {
-  //   "id": "7",
-  //   "name": "Firuze Restaurant",
-  //   "categoryId": "2",
-  //   "rate": "4.6",
-  //   "lat": "40.373144",
-  //   "long": "49.837021",
-  //   "imageUrl": "https://example.com/firuze-restaurant-image.jpg"
-  // },
-  // {
-  //   "id": "8",
-  //   "name": "Mangal Steakhouse",
-  //   "categoryId": "2",
-  //   "rate": "4.5",
-  //   "lat": "40.371518",
-  //   "long": "49.835846",
-  //   "imageUrl": "https://example.com/mangal-steakhouse-image.jpg"
-  // },
-  // {
-  //   "id": "9",
-  //   "name": "Sumakh Restaurant",
-  //   "categoryId": "2",
-  //   "rate": "4.3",
-  //   "lat": "40.369855",
-  //   "long": "49.842165",
-  //   "imageUrl": "https://example.com/sumakh-restaurant-image.jpg"
-  // },
-  // {
-  //   "id": "10",
-  //   "name": "Shirvanshah Museum Restaurant",
-  //   "categoryId": "2",
-  //   "rate": "4.7",
-  //   "lat": "40.364159",
-  //   "long": "49.852235",
-  //   "imageUrl": "https://example.com/sumakh-restaurant-image.jpg"
-  // },
-  // {
-  //   "id": "11",
-  //   "name": "National Museum of History of Azerbaijan",
-  //   "categoryId": "3",
-  //   "rate": "4.7",
-  //   "lat": "40.364166",
-  //   "long": "49.851830",
-  //   "imageUrl": "https://example.com/national-museum-azerbaijan-image.jpg"
-  // },
-  // {
-  //   "id": "12",
-  //   "name": "Heydar Aliyev Center",
-  //   "categoryId": "3",
-  //   "rate": "4.6",
-  //   "lat": "40.381277",
-  //   "long": "49.829972",
-  //   "imageUrl": "https://example.com/heydar-aliyev-center-image.jpg"
-  // },
-  // {
-  //   "id": "13",
-  //   "name": "Carpet Museum",
-  //   "categoryId": "3",
-  //   "rate": "4.4",
-  //   "lat": "40.368775",
-  //   "long": "49.837244",
-  //   "imageUrl": "https://example.com/carpet-museum-image.jpg"
-  // },
-  // {
-  //   "id": "14",
-  //   "name": "Museum of Modern Art",
-  //   "categoryId": "3",
-  //   "rate": "4.5",
-  //   "lat": "40.364812",
-  //   "long": "49.833597",
-  //   "imageUrl": "https://example.com/museum-modern-art-image.jpg"
-  // },
-  // {
-  //   "id": "15",
-  //   "name": "Palace of the Shirvanshahs",
-  //   "categoryId": "3",
-  //   "rate": "4.8",
-  //   "lat": "40.368858",
-  //   "long": "49.846125",
-  //   "imageUrl": "https://example.com/palace-shirvanshahs-image.jpg"
-  // }
-]
-const category: any = [
-  {
-    "name": "Restaurant",
-    "id": "1"
-  },
-  {
-    "name": "Hotel",
-    "id": "2"
-  },
-  {
-    "name": "Museum",
-    "id": "3"
-  },
-  {
-    "name": "Sight",
-    "id": "4"
-  }
-]
 export default function Home() {
-  const [searchs, setSearch] = useState([])
+  const [restaurant, setRestaurant] = useState([])
+  const [category, setCategory] = useState([])
 
   useEffect(() => {
-    setSearch(product)
+    const Network = new baseNetwork()
+
+    Network.getAllCategory().then(response => setCategory(response))
+
+  }, [])
+
+  useEffect(() => {
+    const Network = new baseNetwork()
+
+    Network.getAllRestaurant().then(response => setRestaurant(response))
+
   }, [])
 
   const search = (value: string) => {
-    searchs.filter((q: { name: string; }) => q.name.toLowerCase().includes(value.toLowerCase()));
+    restaurant.filter((q: { name: string; }) => q.name.toLowerCase().includes(value.toLowerCase()));
   }
 
   const renderCategory = ({ item }: any) => {
@@ -276,7 +112,7 @@ export default function Home() {
       {
         <View>
           <FlatList
-            data={product}
+            data={restaurant}
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
           />

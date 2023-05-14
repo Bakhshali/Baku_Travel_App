@@ -6,7 +6,6 @@ import Main from './src/navigations/tab/Main'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function App() {
-
   return (
     <NavigationContainer>
       <FirstLoginProvider>
