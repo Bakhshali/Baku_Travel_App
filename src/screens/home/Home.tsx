@@ -7,16 +7,26 @@ import SvgWatch from '../../components/icons/Watch'
 import SvgStar from '../../components/icons/Star'
 import SvgSave from '../../components/icons/Save'
 import { baseNetwork } from '../../network/Api'
+import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 
 export default function Home() {
 
-  const [restaurant, setRestaurant] = useState([])
+  const [allPalace, setAllPalace] = useState([])
+
+  const [restaurant, setRestaurant] = useState<any>([])
+
+  const [hotel, sethotel] = useState<any>([])
+  const isFocused = useIsFocused()
   
   useEffect(() => {
     const Network = new baseNetwork()
 
-    Network.getAllRestaurant().then(response => setRestaurant(response))
-
+    Network.getAllRestaurant().then(response => setAllPalace(response))
+    const AllHotel = allPalace.filter((c:any)=>c.categoryId==5)
+    sethotel(AllHotel)
+    
+    const AllRestaurant = allPalace.filter((c:any)=>c.categoryId==1)
+    setRestaurant(AllRestaurant)
   }, [])
 
   const renderItem = ({ item }: any) => {
@@ -61,20 +71,20 @@ export default function Home() {
   }
   return (
     <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
-      {
-        <View style={styles.headerMain}>
-          <View style={styles.location}>
-            <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
-            <Text style={styles.locationText}>Baku, Azerbaijan</Text>
-          </View>
-          <View style={styles.weather}>
-            <SvgWeather style={{ marginLeft: 5 }} />
-            <Text style={styles.weatherText}>+2</Text>
-          </View>
+
+      <View style={styles.headerMain}>
+        <View style={styles.location}>
+          <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
+          <Text style={styles.locationText}>Baku, Azerbaijan</Text>
         </View>
-      }
-      {
+        <View style={styles.weather}>
+          <SvgWeather style={{ marginLeft: 5 }} />
+          <Text style={styles.weatherText}>+2</Text>
+        </View>
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false} >
         <View>
+          <Text style={{marginHorizontal:20,marginTop:10,fontSize:16,color:"white"}}>Restaurant nearby</Text>
           <FlatList
             data={restaurant}
             renderItem={renderItem}
@@ -82,7 +92,16 @@ export default function Home() {
             showsHorizontalScrollIndicator={false}
           />
         </View>
-      }
+        <View>
+        <Text style={{marginHorizontal:20,marginTop:10,fontSize:16,color:"white"}}>Hotel nearby</Text>
+          <FlatList
+            data={hotel}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

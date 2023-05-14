@@ -42,7 +42,7 @@ const data = [
   {
     id: 5,
     name: 'Museum',
-    image: require('../../assets/images/onboarding/Hospital.png')8u
+    image: require('../../assets/images/onboarding/Hospital.png')
   }
 ]
 
