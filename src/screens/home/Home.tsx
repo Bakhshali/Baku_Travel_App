@@ -1,4 +1,4 @@
-import { Button, View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, PermissionsAndroid } from 'react-native'
+import { Button, View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, PermissionsAndroid, Pressable } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
@@ -10,8 +10,10 @@ import { baseNetwork } from '../../network/Api'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import { LatLongContext } from '../../context/UserLocation'
 import Geolocations from 'react-native-geolocation-service'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { parse } from 'react-native-svg'
 
-export default function Home() {
+export default function Home({ navigation, route }: any) {
 
   //   const { latitude, longitude, setlatitude, setlongitude } = useContext(LatLongContext);
   //   console.log(latitude, longitude)
@@ -51,12 +53,16 @@ export default function Home() {
   // }
 
 
-  const [allPalace, setAllPalace] = useState([])
+  const [allPalace, setAllPalace] = useState<any>([])
   const [restaurant, setRestaurant] = useState<any>([])
   const [hotel, sethotel] = useState<any>([])
 
   useEffect(() => {
     const Network = new baseNetwork()
+
+    Network.getAllRestaurant().then(resp=>{
+      setAllPalace(resp.data)
+    })
 
     Network.getAllRestaurant().then(response => {
       const data = response.filter((c: any) => c.categoryId == 5)
@@ -67,13 +73,47 @@ export default function Home() {
       const data = response.filter((c: any) => c.categoryId == 1)
       setRestaurant(data)
     })
-
   }, [])
+
+
+  const addToSave = async () => {
+    let saves: any = await AsyncStorage.getItem("save")
+    if (!saves) {
+      saves = []
+      let newItems = {
+        product: allPalace
+      }
+      saves.push(newItems)
+      console.log(saves);
+      
+      await AsyncStorage.setItem("save", JSON.stringify(saves))
+    }
+    else {
+      let parseSave = JSON.parse(saves)
+      let wishlistItem = parseSave.find((c: any) => c.product.id == allPalace.id)
+      if (wishlistItem) {
+        await AsyncStorage.setItem("save", JSON.stringify(parseSave));
+      }
+      else {
+        let wishlistItem = {
+          product: allPalace,
+        }
+        parseSave.push(wishlistItem);
+
+        await AsyncStorage.setItem('save', JSON.stringify(parseSave));
+      }
+
+    }
+
+  }
+
+ 
 
   const renderItem = ({ item }: any) => {
     return (
-      <TouchableOpacity>
-        <View style={styles.card} >
+
+      <View style={styles.card} >
+        <TouchableOpacity>
           <View>
             <Image style={styles.imageStyle}
               source={{ uri: item.imageUrl }}
@@ -96,18 +136,20 @@ export default function Home() {
               </View>
             </View>
           </View>
-          <View style={styles.favorite} >
-            <SvgSave
-              style={{
-                stroke: "white",
-                width: 20,
-                height: 20,
-                fill: "none"
-              }} />
+            <View style={styles.favorite} >
+          <TouchableOpacity onPress={addToSave}>
+              <SvgSave
+                style={{
+                  stroke: "white",
+                  width: 20,
+                  height: 20,
+                  fill: "none"
+                }} />
 
-          </View>
-        </View>
-      </TouchableOpacity>
+          </TouchableOpacity>
+            </View>
+        </TouchableOpacity>
+      </View>
     )
   }
   return (
