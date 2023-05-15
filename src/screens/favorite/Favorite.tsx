@@ -11,209 +11,44 @@ import { SearchItem } from '../../components/icons'
 import SvgRestaurant from '../../components/icons/Restaurant'
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getUserFavorites } from '../../helpers/userFavorites'
 
-// const product: any = [
-//   {
-//     "id": "1",
-//     "name": "Center Hotel",
-//     "categoryId": "1",
-//     "startDate": "09:00",
-//     "endDate": "22:00",
-//     "phone": "+994 01 234 56 78",
-//     "address": "Nizami küçəsi, 203B",
-//     "week": "Mon - Fri",
-//     "rate": "4.5",
-//     "km": 6,
-//     "lat": "40.371572",
-//     "long": "49.837411",
-//     "imageUrl": "https://images.adsttc.com/media/images/5e4c/1025/6ee6/7e0b/9d00/0877/large_jpg/feature_-_Main_hall_1.jpg?1582043123"
-//   },
-//   {
-//     "id": "2",
-//     "name": "Shirvanshah Restaurant",
-//     "categoryId": "1",
-//     "startDate": "09:00",
-//     "endDate": "22:00",
-//     "phone": "+994 01 234 56 78",
-//     "address": "Nizami küçəsi, 203B",
-//     "week": "Mon - Fri",
-//     "rate": "4.5",
-//     "km": 6,
-//     "lat": "40.371572",
-//     "long": "49.837411",
-//     "imageUrl": "https://images.adsttc.com/media/images/5e4c/1025/6ee6/7e0b/9d00/0877/large_jpg/feature_-_Main_hall_1.jpg?1582043123"
-//   },
-//   // {
-//   //   "id": "2",
-//   //   "name": "Fairmont Baku, Flame Towers",
-//   //   "categoryId": "1",
-//   //   "rate": "4.7",
-//   //   "lat": "40.366316",
-//   //   "long": "49.840805",
-//   //   "imageUrl": "https://example.com/fairmont-baku-image.jpg"
-//   // },
-//   // {
-//   //   "id": "3",
-//   //   "name": "Hilton Baku",
-//   //   "categoryId": "1",
-//   //   "rate": "4.4",
-//   //   "lat": "40.372045",
-//   //   "long": "49.837677",
-//   //   "imageUrl": "https://example.com/hilton-baku-image.jpg"
-//   // },
-//   // {
-//   //   "id": "4",
-//   //   "name": "Four Seasons Hotel Baku",
-//   //   "categoryId": "1",
-//   //   "rate": "4.6",
-//   //   "lat": "40.366759",
-//   //   "long": "49.842233",
-//   //   "imageUrl": "https://example.com/four-seasons-baku-image.jpg"
-//   // },
-//   // {
-//   //   "id": "5",
-//   //   "name": "JW Marriott Absheron Baku",
-//   //   "categoryId": "1",
-//   //   "rate": "4.3",
-//   //   "lat": "40.370033",
-//   //   "long": "49.841015",
-//   //   "imageUrl": "https://example.com/jw-marriott-baku-image.jpg"
-//   // },
-//   // {
-//   //   "id": "6",
-//   //   "name": "Nizami Restaurant",
-//   //   "categoryId": "2",
-//   //   "rate": "4.2",
-//   //   "lat": "40.365262",
-//   //   "long": "49.834723",
-//   //   "imageUrl": "https://example.com/nizami-restaurant-image.jpg"
-//   // },
-//   // {
-//   //   "id": "7",
-//   //   "name": "Firuze Restaurant",
-//   //   "categoryId": "2",
-//   //   "rate": "4.6",
-//   //   "lat": "40.373144",
-//   //   "long": "49.837021",
-//   //   "imageUrl": "https://example.com/firuze-restaurant-image.jpg"
-//   // },
-//   // {
-//   //   "id": "8",
-//   //   "name": "Mangal Steakhouse",
-//   //   "categoryId": "2",
-//   //   "rate": "4.5",
-//   //   "lat": "40.371518",
-//   //   "long": "49.835846",
-//   //   "imageUrl": "https://example.com/mangal-steakhouse-image.jpg"
-//   // },
-//   // {
-//   //   "id": "9",
-//   //   "name": "Sumakh Restaurant",
-//   //   "categoryId": "2",
-//   //   "rate": "4.3",
-//   //   "lat": "40.369855",
-//   //   "long": "49.842165",
-//   //   "imageUrl": "https://example.com/sumakh-restaurant-image.jpg"
-//   // },
-//   // {
-//   //   "id": "10",
-//   //   "name": "Shirvanshah Museum Restaurant",
-//   //   "categoryId": "2",
-//   //   "rate": "4.7",
-//   //   "lat": "40.364159",
-//   //   "long": "49.852235",
-//   //   "imageUrl": "https://example.com/sumakh-restaurant-image.jpg"
-//   // },
-//   // {
-//   //   "id": "11",
-//   //   "name": "National Museum of History of Azerbaijan",
-//   //   "categoryId": "3",
-//   //   "rate": "4.7",
-//   //   "lat": "40.364166",
-//   //   "long": "49.851830",
-//   //   "imageUrl": "https://example.com/national-museum-azerbaijan-image.jpg"
-//   // },
-//   // {
-//   //   "id": "12",
-//   //   "name": "Heydar Aliyev Center",
-//   //   "categoryId": "3",
-//   //   "rate": "4.6",
-//   //   "lat": "40.381277",
-//   //   "long": "49.829972",
-//   //   "imageUrl": "https://example.com/heydar-aliyev-center-image.jpg"
-//   // },
-//   // {
-//   //   "id": "13",
-//   //   "name": "Carpet Museum",
-//   //   "categoryId": "3",
-//   //   "rate": "4.4",
-//   //   "lat": "40.368775",
-//   //   "long": "49.837244",
-//   //   "imageUrl": "https://example.com/carpet-museum-image.jpg"
-//   // },
-//   // {
-//   //   "id": "14",
-//   //   "name": "Museum of Modern Art",
-//   //   "categoryId": "3",
-//   //   "rate": "4.5",
-//   //   "lat": "40.364812",
-//   //   "long": "49.833597",
-//   //   "imageUrl": "https://example.com/museum-modern-art-image.jpg"
-//   // },
-//   // {
-//   //   "id": "15",
-//   //   "name": "Palace of the Shirvanshahs",
-//   //   "categoryId": "3",
-//   //   "rate": "4.8",
-//   //   "lat": "40.368858",
-//   //   "long": "49.846125",
-//   //   "imageUrl": "https://example.com/palace-shirvanshahs-image.jpg"
-//   // }
-// ]
-
-
-
-export default function Home() {
+export default function Favorite() {
+  const isFocused = useIsFocused()
 
   const [save, setsave] = useState<any>([])
 
-  const isFocused = useIsFocused()
-
-  const getSave = async () => {
-    let saveItem: any = await AsyncStorage.getItem("save")
-    setsave(JSON.parse(saveItem))
-  }
-
   useEffect(() => {
     if (isFocused) {
-      getSave()
+      getUserFavorites().then(res => setsave(res))
     }
-  }, [])
+  }, [isFocused])
 
 
-  const renderItem = ({ item }: any) => {
+  const render = ({ item }: any) => {
+    console.log(item)
     return (
       <TouchableOpacity>
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
-              source={{ uri: item.product.imageUrl }}
+              source={{ uri: item.imageUrl }}
             />
           </View>
           <View style={styles.cardDetail}>
-            <Text style={{ color: "white", fontSize: 20, fontWeight: "600" }}>{item.product.name}</Text>
+            <Text style={{ color: "white", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{item.product.km} km</Text>
+                <Text style={styles.textDetailStyle}>{item.km} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />
-                <Text style={styles.textDetailStyle}>{item.product.startDate} - {item.product.endDate}</Text>
+                <Text style={styles.textDetailStyle}>{item.startDate} - {item.endDate}</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgStar />
-                <Text style={styles.textDetailStyle}>{item.product.rate}</Text>
+                <Text style={styles.textDetailStyle}>{item.rate}</Text>
               </View>
             </View>
           </View>
@@ -231,23 +66,21 @@ export default function Home() {
       </TouchableOpacity>
     )
   }
-
-
-
+  console.log(save)
   return (
     <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
-      {
-        <View>
-          <View style={{ marginHorizontal: 20, marginTop: 25 }}>
-            <Text style={{ fontWeight: "600", fontSize: 25, color: "white" }}>Saved</Text>
-          </View>
-          <FlatList
-            data={save}
-            renderItem={renderItem}
-            showsHorizontalScrollIndicator={false}
-          />
+
+      <View>
+        <View style={{ marginHorizontal: 20, marginTop: 25 }}>
+          <Text style={{ fontWeight: "600", fontSize: 25, color: "white" }}>Saved</Text>
         </View>
-      }
+        <FlatList
+          data={save}
+          renderItem={render}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+
     </SafeAreaView>
   )
 }

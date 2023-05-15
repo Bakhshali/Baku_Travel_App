@@ -23,6 +23,7 @@ export default function Home({ navigation }: any) {
   const [location, setLocation] = useState<any>([])
   const [address, setAddress] = useState<any>({})
   const [weather, setWeather] = useState<any>({})
+  const [favorites, setFavorites] = useState<any>([])
 
   useEffect(() => {
 
@@ -100,7 +101,13 @@ export default function Home({ navigation }: any) {
   }, [])
 
   const addToSave = async (item: any) => {
-    saveUserFavorites(item).then(res => console.log('save olundu'))
+    if (favorites.length > 0) {
+      setFavorites([...favorites, item])
+      saveUserFavorites(favorites).then(res => console.log('2.defe save olundu'))
+      return
+    }
+    setFavorites([item])
+    saveUserFavorites(favorites).then(res => console.log('ilk defe save olundu'))
   }
 
 
@@ -121,7 +128,7 @@ export default function Home({ navigation }: any) {
     return (
 
 
-      <TouchableOpacity onPress={()=>navigation.navigate("ProductDetail",item)}>
+      <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
