@@ -11,17 +11,18 @@ import { SearchItem } from '../../components/icons'
 import SvgRestaurant from '../../components/icons/Restaurant'
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { getUserFavorites } from '../../helpers/userFavorites'
+import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
 
 export default function Favorite() {
   const [save, setsave] = useState<any>([])
+  const [favorite, setFavorite] = useState<any>([])
   const isFocused = useIsFocused()
 
   useEffect(() => {
     try {
       if (isFocused) {
         getUserFavorites().then(res => {
-          if(res){
+          if (res) {
             setsave(res)
             return
           }
@@ -33,9 +34,15 @@ export default function Favorite() {
     }
   }, [isFocused])
 
+  const deleteSace = async (item: any) => {
+    let atTheMomentList: any = favorite.filter((c: any) => c.item != item)
+    saveUserFavorites(favorite)
+    setFavorite([...atTheMomentList])
+  }
+
   const render = ({ item }: any) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity >
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
@@ -60,13 +67,16 @@ export default function Favorite() {
             </View>
           </View>
           <View style={styles.favorite} >
-            <SvgSave
-              style={{
-                stroke: "white",
-                width: 20,
-                height: 20,
-                fill: "white"
-              }} />
+
+            <TouchableOpacity onPress={() => deleteSace(item)} >
+              <SvgSave
+                style={{
+                  stroke: "white",
+                  width: 20,
+                  height: 20,
+                  fill: "white"
+                }} />
+            </TouchableOpacity>
 
           </View>
         </View>

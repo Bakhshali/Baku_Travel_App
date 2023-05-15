@@ -5,7 +5,7 @@ import SvgStar from '../../components/icons/Star'
 import SvgWatch from '../../components/icons/Watch'
 import SvgPhone from '../../components/icons/Phone'
 import SvgLocation from '../../components/icons/Location'
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 
 const ProductDetail = ({ route }: any) => {
@@ -24,50 +24,54 @@ const ProductDetail = ({ route }: any) => {
             marginTop: 10,
             alignItems: 'center',
           }}>
-          <Text style={{ fontSize: 20, color: 'white', fontWeight: "600", fontFamily: "Outfit-Regular" }}>{route.params.name}</Text>
+          <Text style={{ fontSize: 22, color: 'white', fontWeight: "900", fontFamily: "Outfit-Regular" }}>{route.params.name}</Text>
           <View style={{ flexDirection: "row", alignItems: "center", }}>
             <SvgStar width={14} />
-            <Text style={{ color: 'white', marginLeft: 5 }}>{route.params.rate}</Text>
+            <Text style={{ color: 'white', marginLeft: 5,fontSize:15 }}>{route.params.rate}</Text>
           </View>
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
           <View>
-            <Text style={{ fontSize: 16, color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular" }}>Information</Text>
+            <Text style={{ fontSize: 20, color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular" }}>Information</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
             <SvgWatch width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}> {route.params.week}, {route.params.startDate} - {route.params.endDate}</Text>
+            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular",fontSize:15 }}> {route.params.week}, {route.params.startDate} - {route.params.endDate}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <SvgPhone width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.phone}</Text>
+            <Text style={{fontSize:15, marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.phone}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <SvgLocation width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.address }</Text>
+            <Text style={{fontSize:15, marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.address}</Text>
           </View>
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
-          <Text style={{ fontSize: 16, color: 'white', fontFamily: "Outfit-Regular" }}>Map</Text>
+          <Text style={{ fontSize: 18, color: 'white', fontFamily: "Outfit-Regular" }}>Map</Text>
         </View>
-        <View style={{alignItems: 'center'}}>
-        <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: route.params.lat,
-                longitude: route.params.long,
-                latitudeDelta: 0.0422,
-                longitudeDelta: 0.0421,
-              }}
-            >
-              <Marker
-                coordinate={{ latitude: route.params.lat, longitude: route.params.long }}
-                title="Marker Title"
-                description="Marker Description"
-              />
-            </MapView>
-      </View>
+        <View style={{ alignItems: 'center' }}>
+          {/* <MapView
+            zoomEnabled={true}
+            scrollEnabled={true}
+            showsScale={true}
+            style={styles.map}
+            initialRegion={{
+              latitude: route.params.lat,
+              longitude: route.params.long,
+              latitudeDelta: 0.0422,
+              longitudeDelta: 0.0421,
+
+            }}
+          >
+            <Marker
+              coordinate={{ latitude: route.params.lat, longitude: route.params.long }}
+              title="Marker Title"
+              description="Marker Description"
+            />
+          </MapView> */}
+        </View>
         <View style={{ alignItems: 'center', marginTop: 10 }}>
           <TouchableOpacity>
             <View
@@ -91,9 +95,10 @@ const ProductDetail = ({ route }: any) => {
 export default ProductDetail
 
 const styles = StyleSheet.create({
-  map:{
-    width:"90%",
-    height:200,
-    marginTop:15
+  map: {
+    width: "90%",
+    height: 200,
+    marginTop: 10,
+    borderRadius: 15
   }
 })

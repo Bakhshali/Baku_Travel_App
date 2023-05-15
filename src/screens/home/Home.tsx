@@ -11,6 +11,7 @@ import SvgWeather from '../../components/icons/Weather'
 import { getUserCategories } from '../../helpers/userCategoies'
 import { saveUserFavorites } from '../../helpers/userFavorites'
 import { baseNetwork } from '../../network/Api'
+import Favorite from '../favorite/Favorite'
 
 export default function Home({ navigation }: any) {
 
@@ -73,7 +74,8 @@ export default function Home({ navigation }: any) {
                 .then((res: any) => setAddress(res.data.address));
 
               axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
-                .then((res: any) => setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main }))
+                .then((res: any) => setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main, weatherIcon: res.data.weather[0].icon }))
+
             },
             error => {
               // See error code charts below.
@@ -122,7 +124,9 @@ export default function Home({ navigation }: any) {
   );
 
 
+
   const renderItem = ({ item }: any) => {
+    let favorite = favorites.find((c:any) => c.id == item.id)
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
@@ -150,13 +154,25 @@ export default function Home({ navigation }: any) {
           </View>
           <View style={styles.favorite} >
             <TouchableOpacity onPress={() => addToSave(item)}>
-              <SvgSave
+              {
+              favorite?
+                <SvgSave
                 style={{
                   stroke: "white",
                   width: 20,
                   height: 20,
-                  fill: "none"
+                  fill: "white"
+                  
                 }} />
+                :
+                <SvgSave style={{
+                  stroke: "white",
+                  width: 20,
+                  height: 20,
+                  fill: "none"
+                  
+                }}  />
+              }
 
             </TouchableOpacity>
           </View>
@@ -174,7 +190,10 @@ export default function Home({ navigation }: any) {
           <Text style={styles.locationText}>{address.city}, {address.country}</Text>
         </View>
         <View style={styles.weather}>
-          <SvgWeather style={{ marginLeft: 5 }} />
+          {/* <SvgWeather style={{ marginLeft: 5 }} /> */}
+          <Image style={{ width: 40, height: 40 }}
+            source={{ uri: `http://openweathermap.org/img/wn/${weather.weatherIcon}@4x.png` }}
+          />
           <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
         </View>
       </View>
@@ -248,7 +267,8 @@ const styles = StyleSheet.create({
     // marginHorizontal: 10,
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 40
+    marginTop: 40,
+    marginBottom: 10
   },
   location: {
     flexDirection: "row",

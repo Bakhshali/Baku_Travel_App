@@ -59,7 +59,7 @@ export default function Home({ navigation }: any) {
           </View>
         </View>
       </TouchableOpacity> : <TouchableOpacity onPress={() => addToSelecetedCategory(item)}>
-        <View style={{ marginLeft: 15, marginTop: 18, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
+        <View style={{ marginLeft: 15, marginTop: 18,marginBottom:10, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
           <View style={{ flexDirection: "row", gap: 5, paddingRight: 10 }}>
             <SvgRestaurant />
             <Text style={{ color: "white" }} >{item.name}</Text>
