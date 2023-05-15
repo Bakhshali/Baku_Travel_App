@@ -13,12 +13,14 @@ import Geolocations from 'react-native-geolocation-service'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { parse } from 'react-native-svg'
 import { getUserCategories } from '../../helpers/userCategoies'
+import axios from 'axios'
 
 export default function Home() {
 
   const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState<any>([])
-
+  const [location, setLocation] = useState<any>([])
+  const [address, setAddress] = useState<any>({})
 
 
   useEffect(() => {
@@ -45,67 +47,47 @@ export default function Home() {
     return formattedData;
   };
 
-  //   const { latitude, longitude, setlatitude, setlongitude } = useContext(LatLongContext);
-  //   console.log(latitude, longitude)
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Geolocation Permission',
+            message: 'Can we access your location?',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        console.log('granted', granted);
+        if (granted === 'granted') {
+          console.log('You can use Geolocation');
+          Geolocations.getCurrentPosition(
+            position => {
+              setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+              axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`).then((res: any) => setAddress(res.data.address)
+              );
+            },
+            error => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+          )
+          return true;
+        } else {
+          console.log('You cannot use Geolocation');
+          return false;
+        }
+      } catch (err) {
+        return false;
+      }
 
-  //   async function requestLocationPermission() {
-  //     try {
-  //         const granted = await PermissionsAndroid.request(
-  //             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //             {
-  //                 title: "Uygulama Konum Erişimi",
-  //                 message:
-  //                     "Uygulamanın konumunuza erişmesine izin vermeniz gerekiyor",
-  //                 buttonNeutral: "Daha Sonra Sor",
-  //                 buttonNegative: "İptal",
-  //                 buttonPositive: "Tamam"
-  //             }
-  //         );
-  //         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //             Geolocations.getCurrentPosition(
-  //                 position => {
-  //                     console.log(position)
-  //                     setlatitude(position.coords.latitude)
-  //                     setlongitude(position.coords.longitude)
-  //                 },
-  //                 error => {
-  //                     console.log(error.code, error.message);
-  //                 },
-  //                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-  //             );
+    };
 
-  //         } else {
-  //             console.log("Konum erişim izni reddedildi");
-  //         }
-  //     } catch (err) {
-  //         console.warn(err);
-  //     }
-  // }
-
-
-  // const [allPalace, setAllPalace] = useState<any>([])
-  // const [restaurant, setRestaurant] = useState<any>([])
-  // const [hotel, sethotel] = useState<any>([])
-
-  // useEffect(() => {
-  //   const Network = new baseNetwork()
-
-  //   Network.getAllRestaurant().then(resp => {
-  //     setAllPalace(resp.data)
-  //   })
-
-  //   Network.getAllRestaurant().then(response => {
-  //     const data = response.filter((c: any) => c.categoryId == 5)
-  //     sethotel(data)
-  //   })
-
-  //   Network.getAllRestaurant().then(response => {
-  //     const data = response.filter((c: any) => c.categoryId == 1)
-  //     setRestaurant(data)
-  //   })
-  // }, [])
-
-
+    requestLocationPermission()
+  }, [])
 
   // const addToSave = async () => {
   //   let saves: any = await AsyncStorage.getItem("save")
@@ -210,7 +192,7 @@ export default function Home() {
       <View style={styles.headerMain}>
         <View style={styles.location}>
           <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
-          <Text style={styles.locationText}>Baku, Azerbaijan</Text>
+          <Text style={styles.locationText}>{address.city}, {address.country}</Text>
         </View>
         <View style={styles.weather}>
           <SvgWeather style={{ marginLeft: 5 }} />
