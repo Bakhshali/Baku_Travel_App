@@ -1,66 +1,66 @@
-import { View, Text, StyleSheet, FlatList, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import SvgLocation from '../../components/icons/Location'
-import SvgWeather from '../../components/icons/Weather'
-import SvgWatch from '../../components/icons/Watch'
-import SvgStar from '../../components/icons/Star'
-import SvgSave from '../../components/icons/Save'
-import SvgSearch from '../../components/icons/Search'
 import { SearchItem } from '../../components/icons'
+import SvgLocation from '../../components/icons/Location'
 import SvgRestaurant from '../../components/icons/Restaurant'
+import SvgSave from '../../components/icons/Save'
+import SvgStar from '../../components/icons/Star'
+import SvgWatch from '../../components/icons/Watch'
 import { baseNetwork } from '../../network/Api'
-import { FavoriteCategoryContext } from '../../context/FavoriteCategory'
-import { getUserCategories } from '../../helpers/userCategoies'
 
-export default function Home() {
+export default function Home({ navigation }: any) {
   const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState([])
-  const [defaultFavCategory, setdefaultFavCategory] = useState([])
-
-  const {favoriteCategory, setFavoriteCategory} = useContext(FavoriteCategoryContext)
-
-  useEffect(() => {
-    const Network = new baseNetwork()
-
-    Network.getAllCategory().then(response => setCategory(response))
-    getUserCategories().then(res => setdefaultFavCategory(res))
-
-  }, [])
+  const [searchText, setSearchText] = useState<String>('')
+  const [filteredRestaurant, setFilteredRestaurant] = useState<any>([])
+  const [selectedCategory, setSelecetedCategory] = useState<any>([])
 
   useEffect(() => {
     const Network = new baseNetwork()
-    Network.getAllRestaurant().then((response: []) => {
-        response.forEach((res: any) => {
-        defaultFavCategory.forEach((e: any) => {
-          if (res.categoryId == e.id) {
-              setRestaurant([...restaurant, res])
-          }
-        })
-      })
+
+    Network.getAllCategory().then(response => {
+      setCategory(response)
     })
-    
-
+    Network.getAllRestaurant().then(response => {
+      setRestaurant(response)
+      setFilteredRestaurant(response)
+    })
 
   }, [])
 
-  const search = (value: string) => {
-    restaurant.filter((q: { name: string; }) => q.name.toLowerCase().includes(value.toLowerCase()));
+  useEffect(() => {
+    try {
+      const filteredData = restaurant.filter((q: any) => q.name.toLowerCase().includes(searchText.toLowerCase()));
+      setFilteredRestaurant(filteredData)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [searchText])
+
+  const addToSelecetedCategory = (item: any) => {
+    try {
+      setSelecetedCategory([item])
+      const data = restaurant.filter((e: any) => e.categoryId == item.id)
+      setFilteredRestaurant(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const renderCategory = ({ item }: any) => {
-    const isExist = defaultFavCategory.find((e: any) => e.id == item.id)
+    const isExist = selectedCategory.find((e: any) => e.id == item.id)
     return (
-      isExist ? <TouchableOpacity>
-        <View style={{ backgroundColor: '#E0783E' ,marginLeft:20, marginTop: 18, borderWidth:1,borderColor:"#404040", padding: 5 ,borderRadius:7}}>
-          <View style={{ flexDirection: "row", gap: 5,paddingRight:10 }}>
+      isExist ? <TouchableOpacity onPress={() => addToSelecetedCategory(item)}>
+        <View style={{ backgroundColor: '#E0783E', marginLeft: 15, marginTop: 18, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
+          <View style={{ flexDirection: "row", gap: 5, paddingRight: 10 }}>
             <SvgRestaurant />
             <Text style={{ color: "white" }} >{item.name}</Text>
           </View>
         </View>
-      </TouchableOpacity> : <TouchableOpacity>
-        <View style={{ marginLeft:20, marginTop: 18, borderWidth:1,borderColor:"#404040", padding: 5 ,borderRadius:7}}>
-          <View style={{ flexDirection: "row", gap: 5,paddingRight:10 }}>
+      </TouchableOpacity> : <TouchableOpacity onPress={() => addToSelecetedCategory(item)}>
+        <View style={{ marginLeft: 15, marginTop: 18, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
+          <View style={{ flexDirection: "row", gap: 5, paddingRight: 10 }}>
             <SvgRestaurant />
             <Text style={{ color: "white" }} >{item.name}</Text>
           </View>
@@ -71,7 +71,7 @@ export default function Home() {
 
   const renderItem = ({ item }: any) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
@@ -110,13 +110,11 @@ export default function Home() {
     )
   }
 
-
-
   return (
     <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
       {
         <View style={styles.input}>
-          <TextInput onChangeText={search} placeholderTextColor="#B9B9B9" style={styles.inputStyle} placeholder='Search by items' />
+          <TextInput onChangeText={setSearchText} placeholderTextColor="#B9B9B9" style={styles.inputStyle} placeholder='Search by items' />
           <SearchItem style={styles.inputSearch} />
         </View>
 
@@ -135,7 +133,7 @@ export default function Home() {
       {
         <View>
           <FlatList
-            data={restaurant}
+            data={filteredRestaurant}
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
           />

@@ -8,6 +8,7 @@ import SvgLocation from '../../components/icons/Location'
 import MapView, { Marker } from 'react-native-maps';
 
 const ProductDetail = ({ route }: any) => {
+  
   const initialRegion = {
     latitude: route.params.lat,
     longitude: route.params.long,
@@ -29,7 +30,7 @@ const ProductDetail = ({ route }: any) => {
             marginTop: 10,
             alignItems: 'center',
           }}>
-          <Text style={{ fontSize: 20, color: 'white', fontWeight: "600", fontFamily: "SF-Pro-Text-Bold" }}>{route.params.name}</Text>
+          <Text style={{ fontSize: 20, color: 'white', fontWeight: "600", fontFamily: "Outfit-Regular" }}>{route.params.name}</Text>
           <View style={{ flexDirection: "row", alignItems: "center", }}>
             <SvgStar width={14} />
             <Text style={{ color: 'white', marginLeft: 5 }}>{route.params.rate}</Text>
@@ -37,24 +38,24 @@ const ProductDetail = ({ route }: any) => {
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
           <View>
-            <Text style={{ fontSize: 16, color: 'white', fontWeight: "500", fontFamily: "SF-Pro-Text-Bold" }}>Information</Text>
+            <Text style={{ fontSize: 16, color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular" }}>Information</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
             <SvgWatch width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "SF-Pro-Text-Bold" }}> {route.params.week}, {route.params.startDate} - {route.params.endDate}</Text>
+            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}> {route.params.week}, {route.params.startDate} - {route.params.endDate}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <SvgPhone width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "SF-Pro-Text-Bold" }}>{route.params.phone}</Text>
+            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.phone}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <SvgLocation width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "SF-Pro-Text-Bold" }}>{route.params.address }</Text>
+            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.address }</Text>
           </View>
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
-          <Text style={{ fontSize: 16, color: 'white', fontFamily: "SF-Pro-Text-Bold" }}>Map</Text>
+          <Text style={{ fontSize: 16, color: 'white', fontFamily: "Outfit-Regular" }}>Map</Text>
         </View>
         <View style={{alignItems: 'center'}}>
         <MapView

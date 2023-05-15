@@ -14,19 +14,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getUserFavorites } from '../../helpers/userFavorites'
 
 export default function Favorite() {
+  const [save, setsave] = useState<any>([])
   const isFocused = useIsFocused()
 
-  const [save, setsave] = useState<any>([])
-
   useEffect(() => {
-    if (isFocused) {
-      getUserFavorites().then(res => setsave(res))
+    try {
+      if (isFocused) {
+        getUserFavorites().then(res => {
+          if(res){
+            setsave(res)
+            return
+          }
+          return
+        })
+      }
+    } catch (error) {
+      console.log(error)
     }
   }, [isFocused])
 
-
   const render = ({ item }: any) => {
-    console.log(item)
     return (
       <TouchableOpacity>
         <View style={styles.card} >
@@ -66,7 +73,7 @@ export default function Favorite() {
       </TouchableOpacity>
     )
   }
-  console.log(save)
+
   return (
     <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
 

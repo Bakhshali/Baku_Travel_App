@@ -1,20 +1,16 @@
-import { Button, View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, PermissionsAndroid, Pressable, SectionList } from 'react-native'
-import React, { useEffect, useState, useContext } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Geolocations from 'react-native-geolocation-service'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
-import SvgWeather from '../../components/icons/Weather'
-import SvgWatch from '../../components/icons/Watch'
-import SvgStar from '../../components/icons/Star'
 import SvgSave from '../../components/icons/Save'
-import { baseNetwork } from '../../network/Api'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native'
-import { LatLongContext } from '../../context/UserLocation'
-import Geolocations from 'react-native-geolocation-service'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { parse } from 'react-native-svg'
+import SvgStar from '../../components/icons/Star'
+import SvgWatch from '../../components/icons/Watch'
+import SvgWeather from '../../components/icons/Weather'
 import { getUserCategories } from '../../helpers/userCategoies'
-import axios from 'axios'
-import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
+import { saveUserFavorites } from '../../helpers/userFavorites'
+import { baseNetwork } from '../../network/Api'
 
 export default function Home({ navigation }: any) {
 
@@ -40,13 +36,17 @@ export default function Home({ navigation }: any) {
 
 
   const formatData = () => {
-    const formattedData: any = [];
-    category.forEach((category: any) => {
-      const categoryRestaurants = restaurant.filter((restaurant: any) => restaurant.categoryId === category.id);
-      formattedData.push({ category: category.name, data: categoryRestaurants });
-    });
+    try {
+      const formattedData: any = [];
+      category.forEach((category: any) => {
+        const categoryRestaurants = restaurant.filter((restaurant: any) => restaurant.categoryId === category.id);
+        formattedData.push({ category: category.name, data: categoryRestaurants });
+      });
 
-    return formattedData;
+      return formattedData;
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   useEffect(() => {
@@ -68,17 +68,12 @@ export default function Home({ navigation }: any) {
           Geolocations.getCurrentPosition(
             position => {
               setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+
               axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-                .then((res: any) => setAddress(res.data.address),
-                  axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
-                    .then((res: any) => {
-                      let newObj = {
-                        temp: res.data.main.temp,
-                        condition: res.data.weather[0].main
-                      }
-                      setWeather(newObj)
-                    }),
-                );
+                .then((res: any) => setAddress(res.data.address));
+
+              axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
+                .then((res: any) => setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main }))
             },
             error => {
               // See error code charts below.
@@ -101,15 +96,18 @@ export default function Home({ navigation }: any) {
   }, [])
 
   const addToSave = async (item: any) => {
-    if (favorites.length > 0) {
-      setFavorites([...favorites, item])
-      saveUserFavorites(favorites).then(res => console.log('2.defe save olundu'))
-      return
+    try {
+      if (favorites.length > 0) {
+        setFavorites([...favorites, item])
+        saveUserFavorites(favorites).then(res => console.log('2.defe save olundu'))
+        return
+      }
+      setFavorites([item])
+      saveUserFavorites(favorites).then(res => console.log('ilk defe save olundu'))
+    } catch (error) {
+      console.log(error)
     }
-    setFavorites([item])
-    saveUserFavorites(favorites).then(res => console.log('ilk defe save olundu'))
   }
-
 
   const renderCategory = ({ item }: any) => (
     <View>
@@ -126,8 +124,6 @@ export default function Home({ navigation }: any) {
 
   const renderItem = ({ item }: any) => {
     return (
-
-
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
           <View>
