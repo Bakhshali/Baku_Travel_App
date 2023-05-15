@@ -14,8 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { parse } from 'react-native-svg'
 import { getUserCategories } from '../../helpers/userCategoies'
 import axios from 'axios'
+import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
 
-export default function Home() {
+export default function Home({ navigation }: any) {
 
   const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState<any>([])
@@ -98,43 +99,9 @@ export default function Home() {
     requestLocationPermission()
   }, [])
 
-  // const addToSave = async () => {
-  //   let saves: any = await AsyncStorage.getItem("save")
-  //   if (!saves) {
-  //     saves = []
-  //     let newItems = {
-  //       product: allPalace
-  //     }
-  //     saves.push(newItems)
-  //     console.log(saves);
-
-  //     await AsyncStorage.setItem("save", JSON.stringify(saves))
-  //   }
-  //   else {
-  //     let parseSave = JSON.parse(saves)
-  //     let wishlistItem = parseSave.find((c: any) => c.product.id == allPalace.id)
-  //     if (wishlistItem) {
-  //       await AsyncStorage.setItem("save", JSON.stringify(parseSave));
-  //     }
-  //     else {
-  //       let wishlistItem = {
-  //         product: allPalace,
-  //       }
-  //       parseSave.push(wishlistItem);
-
-  //       await AsyncStorage.setItem('save', JSON.stringify(parseSave));
-  //     }
-
-  //   }
-
-  // }
-
-
-
-  // const goToDetail = (id:any)=>{
-  //   navigation.navigate("ProductDetail",{id:id})
-  // }
-
+  const addToSave = async (item: any) => {
+    saveUserFavorites(item).then(res => console.log('save olundu'))
+  }
 
 
   const renderCategory = ({ item }: any) => (
@@ -154,7 +121,7 @@ export default function Home() {
     return (
 
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>navigation.navigate("ProductDetail",item)}>
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
@@ -179,7 +146,7 @@ export default function Home() {
             </View>
           </View>
           <View style={styles.favorite} >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => addToSave(item)}>
               <SvgSave
                 style={{
                   stroke: "white",
