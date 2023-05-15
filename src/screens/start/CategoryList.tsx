@@ -6,42 +6,42 @@ import { saveUserCategories } from '../../helpers/userCategoies'
 
 const data = [
   {
-    id: 1,
+    id: "1",
     name: 'Restaurant',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 2,
+    id: "2",
     name: 'Sight',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 3,
+    id: "3",
     name: 'Shop',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 4,
+    id: "4",
     name: 'Museum',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 6,
+    id: "5",
     name: 'Hotel',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 7,
+    id: "6",
     name: 'Club',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 8,
+    id: "7",
     name: 'Park',
     image: require('../../assets/images/onboarding/Hospital.png')
   },
   {
-    id: 9,
+    id: "8",
     name: 'Hospital',
     image: require('../../assets/images/onboarding/Hospital.png')
   }
@@ -65,7 +65,6 @@ export default function CategoryList({ navigation }: any) {
 
   const next = () => {
     if (category.length > 0) {
-
       saveUserCategories(category)
         .then(res => {
           setFirstLogin(false)

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Category{
-    id: number;
+    id: string;
     name: string;
     image: string;
 }

@@ -185,12 +185,10 @@ export default function Home() {
   }
 
   useEffect(() => {
-
     if (isFocused) {
       getSave()
     }
-
-  }, [isFocused])
+  }, [])
 
 
   const renderItem = ({ item }: any) => {

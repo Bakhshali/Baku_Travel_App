@@ -1,4 +1,4 @@
-import { Button, View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, PermissionsAndroid, Pressable } from 'react-native'
+import { Button, View, Text, StyleSheet, FlatList, Image, ScrollView, TouchableOpacity, PermissionsAndroid, Pressable, SectionList } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
@@ -12,8 +12,38 @@ import { LatLongContext } from '../../context/UserLocation'
 import Geolocations from 'react-native-geolocation-service'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { parse } from 'react-native-svg'
+import { getUserCategories } from '../../helpers/userCategoies'
 
-export default function Home({ navigation, route }: any) {
+export default function Home() {
+
+  const [restaurant, setRestaurant] = useState<any>([])
+  const [category, setCategory] = useState<any>([])
+
+
+
+  useEffect(() => {
+
+    const network = new baseNetwork()
+
+    network.getAllRestaurant().then(resp => {
+      setRestaurant(resp)
+    })
+
+    getUserCategories().then(res => setCategory(res)
+    );
+
+  }, [])
+
+
+  const formatData = () => {
+    const formattedData: any = [];
+    category.forEach((category: any) => {
+      const categoryRestaurants = restaurant.filter((restaurant: any) => restaurant.categoryId === category.id);
+      formattedData.push({ category: category.name, data: categoryRestaurants });
+    });
+
+    return formattedData;
+  };
 
   //   const { latitude, longitude, setlatitude, setlongitude } = useContext(LatLongContext);
   //   console.log(latitude, longitude)
@@ -53,67 +83,88 @@ export default function Home({ navigation, route }: any) {
   // }
 
 
-  const [allPalace, setAllPalace] = useState<any>([])
-  const [restaurant, setRestaurant] = useState<any>([])
-  const [hotel, sethotel] = useState<any>([])
+  // const [allPalace, setAllPalace] = useState<any>([])
+  // const [restaurant, setRestaurant] = useState<any>([])
+  // const [hotel, sethotel] = useState<any>([])
 
-  useEffect(() => {
-    const Network = new baseNetwork()
+  // useEffect(() => {
+  //   const Network = new baseNetwork()
 
-    Network.getAllRestaurant().then(resp=>{
-      setAllPalace(resp.data)
-    })
+  //   Network.getAllRestaurant().then(resp => {
+  //     setAllPalace(resp.data)
+  //   })
 
-    Network.getAllRestaurant().then(response => {
-      const data = response.filter((c: any) => c.categoryId == 5)
-      sethotel(data)
-    })
+  //   Network.getAllRestaurant().then(response => {
+  //     const data = response.filter((c: any) => c.categoryId == 5)
+  //     sethotel(data)
+  //   })
 
-    Network.getAllRestaurant().then(response => {
-      const data = response.filter((c: any) => c.categoryId == 1)
-      setRestaurant(data)
-    })
-  }, [])
+  //   Network.getAllRestaurant().then(response => {
+  //     const data = response.filter((c: any) => c.categoryId == 1)
+  //     setRestaurant(data)
+  //   })
+  // }, [])
 
 
-  const addToSave = async () => {
-    let saves: any = await AsyncStorage.getItem("save")
-    if (!saves) {
-      saves = []
-      let newItems = {
-        product: allPalace
-      }
-      saves.push(newItems)
-      console.log(saves);
-      
-      await AsyncStorage.setItem("save", JSON.stringify(saves))
-    }
-    else {
-      let parseSave = JSON.parse(saves)
-      let wishlistItem = parseSave.find((c: any) => c.product.id == allPalace.id)
-      if (wishlistItem) {
-        await AsyncStorage.setItem("save", JSON.stringify(parseSave));
-      }
-      else {
-        let wishlistItem = {
-          product: allPalace,
-        }
-        parseSave.push(wishlistItem);
 
-        await AsyncStorage.setItem('save', JSON.stringify(parseSave));
-      }
+  // const addToSave = async () => {
+  //   let saves: any = await AsyncStorage.getItem("save")
+  //   if (!saves) {
+  //     saves = []
+  //     let newItems = {
+  //       product: allPalace
+  //     }
+  //     saves.push(newItems)
+  //     console.log(saves);
 
-    }
+  //     await AsyncStorage.setItem("save", JSON.stringify(saves))
+  //   }
+  //   else {
+  //     let parseSave = JSON.parse(saves)
+  //     let wishlistItem = parseSave.find((c: any) => c.product.id == allPalace.id)
+  //     if (wishlistItem) {
+  //       await AsyncStorage.setItem("save", JSON.stringify(parseSave));
+  //     }
+  //     else {
+  //       let wishlistItem = {
+  //         product: allPalace,
+  //       }
+  //       parseSave.push(wishlistItem);
 
-  }
+  //       await AsyncStorage.setItem('save', JSON.stringify(parseSave));
+  //     }
 
- 
+  //   }
+
+  // }
+
+
+
+  // const goToDetail = (id:any)=>{
+  //   navigation.navigate("ProductDetail",{id:id})
+  // }
+
+
+
+  const renderCategory = ({ item }: any) => (
+    <View>
+      <Text style={{ marginHorizontal: 20, marginTop: 10, fontSize: 17, color: "white" }} >{item.category} nearby</Text>
+      <FlatList
+        data={item.data}
+        horizontal
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderItem}
+      />
+    </View>
+  );
+
 
   const renderItem = ({ item }: any) => {
     return (
 
-      <View style={styles.card} >
-        <TouchableOpacity>
+
+      <TouchableOpacity>
+        <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
               source={{ uri: item.imageUrl }}
@@ -136,8 +187,8 @@ export default function Home({ navigation, route }: any) {
               </View>
             </View>
           </View>
-            <View style={styles.favorite} >
-          <TouchableOpacity onPress={addToSave}>
+          <View style={styles.favorite} >
+            <TouchableOpacity>
               <SvgSave
                 style={{
                   stroke: "white",
@@ -146,12 +197,13 @@ export default function Home({ navigation, route }: any) {
                   fill: "none"
                 }} />
 
-          </TouchableOpacity>
-            </View>
-        </TouchableOpacity>
-      </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
     )
   }
+
   return (
     <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
 
@@ -165,23 +217,12 @@ export default function Home({ navigation, route }: any) {
           <Text style={styles.weatherText}>+2</Text>
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} >
+      <ScrollView horizontal>
         <View>
-          <Text style={{ marginHorizontal: 20, marginTop: 10, fontSize: 16, color: "white" }}>Restaurant nearby</Text>
           <FlatList
-            data={restaurant}
-            renderItem={renderItem}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-        <View>
-          <Text style={{ marginHorizontal: 20, marginTop: 10, fontSize: 16, color: "white" }}>Hotel nearby</Text>
-          <FlatList
-            data={hotel}
-            renderItem={renderItem}
-            horizontal
-            showsHorizontalScrollIndicator={false}
+            data={formatData()}
+            keyExtractor={(item, index) => item.category + index}
+            renderItem={renderCategory}
           />
         </View>
       </ScrollView>
