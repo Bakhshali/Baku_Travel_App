@@ -3,7 +3,6 @@ import React from 'react'
 import CategoryList from '../../screens/start/CategoryList'
 import Onboarding from '../../screens/start/Onboarding'
 import Geolocation from '../../screens/start/Geolocation'
-import ProductDetail from '../../screens/detail/ProductDetail'
 
 const Stack = createNativeStackNavigator()
 
@@ -15,8 +14,7 @@ export default function Start() {
             }>
             <Stack.Screen name='OnboardingStackScreen' component={Onboarding} />
             <Stack.Screen name='CategoryListStackScreen' component={CategoryList} />
-            <Stack.Screen name='ProductDetailScreen' component={ProductDetail} />
-            {/* <Stack.Screen name='GeolocationStackScreen' component={Geolocation} /> */}
+            <Stack.Screen name='GeolocationStackScreen' component={Geolocation} />
         </Stack.Navigator>
     )
 }

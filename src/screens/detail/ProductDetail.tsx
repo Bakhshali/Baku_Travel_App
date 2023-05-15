@@ -5,16 +5,10 @@ import SvgStar from '../../components/icons/Star'
 import SvgWatch from '../../components/icons/Watch'
 import SvgPhone from '../../components/icons/Phone'
 import SvgLocation from '../../components/icons/Location'
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
+
 
 const ProductDetail = ({ route }: any) => {
-  
-  const initialRegion = {
-    latitude: route.params.lat,
-    longitude: route.params.long,
-    latitudeDelta: 0.0422,
-    longitudeDelta: 0.0421,
-  };
 
   return (
     <View style={{ backgroundColor: '#1C1C1C', flex: 1 }} >
@@ -60,7 +54,12 @@ const ProductDetail = ({ route }: any) => {
         <View style={{alignItems: 'center'}}>
         <MapView
               style={styles.map}
-              initialRegion={initialRegion}
+              initialRegion={{
+                latitude: route.params.lat,
+                longitude: route.params.long,
+                latitudeDelta: 0.0422,
+                longitudeDelta: 0.0421,
+              }}
             >
               <Marker
                 coordinate={{ latitude: route.params.lat, longitude: route.params.long }}
