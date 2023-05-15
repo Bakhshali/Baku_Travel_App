@@ -67,16 +67,16 @@ export default function Home() {
             position => {
               setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
               axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-              .then((res: any) => setAddress(res.data.address),
-              axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
-              .then((res:any) => {
-                let newObj = {
-                  temp: res.data.main.temp,
-                  condition: res.data.weather[0].main
-                }
-                setWeather(newObj)
-              }),
-              );
+                .then((res: any) => setAddress(res.data.address),
+                  axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
+                    .then((res: any) => {
+                      let newObj = {
+                        temp: res.data.main.temp,
+                        condition: res.data.weather[0].main
+                      }
+                      setWeather(newObj)
+                    }),
+                );
             },
             error => {
               // See error code charts below.
