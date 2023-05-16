@@ -89,6 +89,7 @@ export default function Home({ navigation }: any) {
   }
 
   const renderItem = ({ item }: any) => {
+    const favorite = savedItem.find((c: any) => c.id == item.id)
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
@@ -115,13 +116,25 @@ export default function Home({ navigation }: any) {
             </View>
           </View>
           <TouchableOpacity style={styles.favorite} onPress={() => addToSave(item)}>
-            <SvgSave
-              style={{
-                stroke: "white",
-                width: 20,
-                height: 20,
-                fill: "none"
-              }} />
+          {
+                favorite ?
+                  <SvgSave
+                    style={{
+                      stroke: "white",
+                      width: 20,
+                      height: 20,
+                      fill: "white"
+
+                    }} />
+                  :
+                  <SvgSave style={{
+                    stroke: "white",
+                    width: 20,
+                    height: 20,
+                    fill: "none"
+
+                  }} />
+              }
 
           </TouchableOpacity>
         </View>

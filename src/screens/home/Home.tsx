@@ -130,7 +130,7 @@ export default function Home({ navigation }: any) {
 
 
   const renderItem = ({ item }: any) => {
-    let favorite = favorites.find((c: any) => c.id == item.id)
+    let favorite = savedItem.find((c: any) => c.id == item.id)
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
