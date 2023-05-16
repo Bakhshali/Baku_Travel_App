@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Geolocations from 'react-native-geolocation-service'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
@@ -12,15 +12,17 @@ import { saveUserFavorites } from '../../helpers/userFavorites'
 import { baseNetwork } from '../../network/Api'
 import { SavedContext } from '../../context/Saved'
 import { getUserFavorites } from '../../helpers/userFavorites'
+import Loading from '../../components/Load'
 
 export default function Home({ navigation }: any) {
 
+  const [loadingWeather, setWeatherLoading] = useState<Boolean>(true)
+  const [loadingRestaurant, setLoadingRestaurant] = useState<Boolean>(true)
   const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState<any>([])
   const [location, setLocation] = useState<any>([])
   const [address, setAddress] = useState<any>({})
   const [weather, setWeather] = useState<any>({})
-  const [favorites, setFavorites] = useState<any>([])
   const { savedItem, setSavedItem } = useContext(SavedContext)
 
   useEffect(() => {
@@ -29,10 +31,10 @@ export default function Home({ navigation }: any) {
 
     network.getAllRestaurant().then(resp => {
       setRestaurant(resp)
+      setLoadingRestaurant(false)
     })
 
     getUserCategories().then(res => setCategory(res));
-
 
   }, [])
 
@@ -75,8 +77,9 @@ export default function Home({ navigation }: any) {
                 .then((res: any) => setAddress(res.data.address));
 
               axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
-                .then((res: any) => setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main, weatherIcon: res.data.weather[0].icon }))
-
+                .then((res: any) => {
+                  setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main, weatherIcon: res.data.weather[0].icon })})
+                  setWeatherLoading(false)
             },
             error => {
               // See error code charts below.
@@ -185,31 +188,31 @@ export default function Home({ navigation }: any) {
     )
   }
   return (
-    <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
+    loadingRestaurant || loadingWeather ? <Loading /> : <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
 
-      <View style={styles.headerMain}>
-        <View style={styles.location}>
-          <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
-          <Text style={styles.locationText}>{address.city}, {address.country}</Text>
-        </View>
-        <View style={styles.weather}>
-          {/* <SvgWeather style={{ marginLeft: 5 }} /> */}
-          <Image style={{ width: 40, height: 40 }}
-            source={{ uri: `http://openweathermap.org/img/wn/${weather.weatherIcon}@4x.png` }}
-          />
-          <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
-        </View>
+    <View style={styles.headerMain}>
+      <View style={styles.location}>
+        <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
+        <Text style={styles.locationText}>{address.city}, {address.country}</Text>
       </View>
-      <ScrollView horizontal>
-        <View>
-          <FlatList
-            data={formatData()}
-            keyExtractor={(item, index) => item.category + index}
-            renderItem={renderCategory}
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <View style={styles.weather}>
+        {/* <SvgWeather style={{ marginLeft: 5 }} /> */}
+        <Image style={{ width: 40, height: 40 }}
+          source={{ uri: `http://openweathermap.org/img/wn/${weather.weatherIcon}@4x.png` }}
+        />
+        <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
+      </View>
+    </View>
+    <ScrollView horizontal>
+      <View>
+        <FlatList
+          data={formatData()}
+          keyExtractor={(item, index) => item.category + index}
+          renderItem={renderCategory}
+        />
+      </View>
+    </ScrollView>
+  </SafeAreaView>
   )
 }
 

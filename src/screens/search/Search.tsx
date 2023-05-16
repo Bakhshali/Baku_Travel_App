@@ -10,8 +10,10 @@ import SvgWatch from '../../components/icons/Watch'
 import { baseNetwork } from '../../network/Api'
 import { SavedContext } from '../../context/Saved'
 import { saveUserFavorites } from '../../helpers/userFavorites'
+import Loading from '../../components/Load'
 
 export default function Home({ navigation }: any) {
+  const [loading, setloading] = useState<Boolean>(true)
   const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState([])
   const [searchText, setSearchText] = useState<String>('')
@@ -28,6 +30,7 @@ export default function Home({ navigation }: any) {
     Network.getAllRestaurant().then(response => {
       setRestaurant(response)
       setFilteredRestaurant(response)
+      setloading(false)
     })
 
   }, [])
@@ -143,7 +146,7 @@ export default function Home({ navigation }: any) {
   }
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
+    loading ? <Loading /> : <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
       {
         <View style={styles.input}>
           <TextInput onChangeText={setSearchText} placeholderTextColor="#B9B9B9" style={styles.inputStyle} placeholder='Search by items' />
