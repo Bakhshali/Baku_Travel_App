@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Geolocations from 'react-native-geolocation-service'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,11 +7,11 @@ import SvgLocation from '../../components/icons/Location'
 import SvgSave from '../../components/icons/Save'
 import SvgStar from '../../components/icons/Star'
 import SvgWatch from '../../components/icons/Watch'
-import SvgWeather from '../../components/icons/Weather'
 import { getUserCategories } from '../../helpers/userCategoies'
 import { saveUserFavorites } from '../../helpers/userFavorites'
 import { baseNetwork } from '../../network/Api'
-import Favorite from '../favorite/Favorite'
+import { SavedContext } from '../../context/Saved'
+import { getUserFavorites } from '../../helpers/userFavorites'
 
 export default function Home({ navigation }: any) {
 
@@ -21,6 +21,7 @@ export default function Home({ navigation }: any) {
   const [address, setAddress] = useState<any>({})
   const [weather, setWeather] = useState<any>({})
   const [favorites, setFavorites] = useState<any>([])
+  const { savedItem, setSavedItem } = useContext(SavedContext)
 
   useEffect(() => {
 
@@ -30,8 +31,8 @@ export default function Home({ navigation }: any) {
       setRestaurant(resp)
     })
 
-    getUserCategories().then(res => setCategory(res)
-    );
+    getUserCategories().then(res => setCategory(res));
+
 
   }, [])
 
@@ -97,18 +98,21 @@ export default function Home({ navigation }: any) {
     requestLocationPermission()
   }, [])
 
-  const addToSave = async (item: any) => {
-    try {
-      if (favorites.length > 0) {
-        setFavorites([...favorites, item])
-        saveUserFavorites(favorites).then(res => console.log('2.defe save olundu'))
-        return
-      }
-      setFavorites([item])
-      saveUserFavorites(favorites).then(res => console.log('ilk defe save olundu'))
-    } catch (error) {
-      console.log(error)
+  useEffect(() => {
+    saveUserFavorites(savedItem).then(res => console.log('Save olundu', res))
+  }, [savedItem])
+
+  const addToSave = (item: any) => {
+    const isExist = savedItem.find(e => e.id == item.id)
+    console.log('isExist', isExist)
+    if (!isExist) {
+      setSavedItem([...savedItem, item])
+      console.log('Olmadigi ucun dusdu bura')
+      return
     }
+    const filtered = savedItem.filter(e => e.id !== item.id)
+    setSavedItem(filtered)
+    console.log('Oldugu ucun dusdu bura')
   }
 
   const renderCategory = ({ item }: any) => (
@@ -126,7 +130,7 @@ export default function Home({ navigation }: any) {
 
 
   const renderItem = ({ item }: any) => {
-    let favorite = favorites.find((c:any) => c.id == item.id)
+    let favorite = favorites.find((c: any) => c.id == item.id)
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
@@ -155,23 +159,23 @@ export default function Home({ navigation }: any) {
           <View style={styles.favorite} >
             <TouchableOpacity onPress={() => addToSave(item)}>
               {
-              favorite?
-                <SvgSave
-                style={{
-                  stroke: "white",
-                  width: 20,
-                  height: 20,
-                  fill: "white"
-                  
-                }} />
-                :
-                <SvgSave style={{
-                  stroke: "white",
-                  width: 20,
-                  height: 20,
-                  fill: "none"
-                  
-                }}  />
+                favorite ?
+                  <SvgSave
+                    style={{
+                      stroke: "white",
+                      width: 20,
+                      height: 20,
+                      fill: "white"
+
+                    }} />
+                  :
+                  <SvgSave style={{
+                    stroke: "white",
+                    width: 20,
+                    height: 20,
+                    fill: "none"
+
+                  }} />
               }
 
             </TouchableOpacity>
@@ -180,7 +184,6 @@ export default function Home({ navigation }: any) {
       </TouchableOpacity>
     )
   }
-
   return (
     <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
 

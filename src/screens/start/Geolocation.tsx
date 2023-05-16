@@ -2,7 +2,7 @@ import { useContext, useState } from 'react'
 import { Text, Button, PermissionsAndroid, SafeAreaView } from 'react-native'
 import Geolocations from 'react-native-geolocation-service';
 import { FirstLoginContext } from '../../context/FirstLogin';
-import { LatLongContext } from '../../context/UserLocation';
+import { LatLongContext } from '../../context/Saved';
 
 function Geolocation({ }) {
 

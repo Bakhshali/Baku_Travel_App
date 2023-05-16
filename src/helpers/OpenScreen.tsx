@@ -5,7 +5,7 @@ import { getUserCategories } from './userCategoies';
 import Start from '../navigations/stack/Start'
 import Main from '../navigations/tab/Main';
 import { FavoriteCategoryProvider } from '../context/FavoriteCategory';
-import { UserLocationProvider } from '../context/UserLocation';
+import { SavedProvider } from '../context/Saved';
 
 export default function OpenScreen() {
 
@@ -38,9 +38,9 @@ export default function OpenScreen() {
       return <Start />
     else
       return <FavoriteCategoryProvider>
-        <UserLocationProvider>
+        <SavedProvider>
           <Main />
-        </UserLocationProvider>
+        </SavedProvider>
       </FavoriteCategoryProvider>
   }
 }

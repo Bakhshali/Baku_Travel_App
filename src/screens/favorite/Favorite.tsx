@@ -1,21 +1,18 @@
-import { View, Text, StyleSheet, FlatList, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useIsFocused } from '@react-navigation/native'
+import React, { useContext, useEffect, useState } from 'react'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SvgLocation from '../../components/icons/Location'
-import SvgWeather from '../../components/icons/Weather'
-import SvgWatch from '../../components/icons/Watch'
-import SvgStar from '../../components/icons/Star'
 import SvgSave from '../../components/icons/Save'
-import SvgSearch from '../../components/icons/Search'
-import { SearchItem } from '../../components/icons'
-import SvgRestaurant from '../../components/icons/Restaurant'
-import { useIsFocused } from '@react-navigation/native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import SvgStar from '../../components/icons/Star'
+import SvgWatch from '../../components/icons/Watch'
+import { SavedContext } from '../../context/Saved'
 import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
 
 export default function Favorite() {
   const [save, setsave] = useState<any>([])
   const [favorite, setFavorite] = useState<any>([])
+  const { savedItem, setSavedItem } = useContext(SavedContext)
   const isFocused = useIsFocused()
 
   useEffect(() => {
@@ -23,7 +20,7 @@ export default function Favorite() {
       if (isFocused) {
         getUserFavorites().then(res => {
           if (res) {
-            setsave(res)
+            setSavedItem(res)
             return
           }
           return
@@ -32,12 +29,16 @@ export default function Favorite() {
     } catch (error) {
       console.log(error)
     }
-  }, [isFocused])
+  }, [])
 
-  const deleteSace = async (item: any) => {
-    let atTheMomentList: any = favorite.filter((c: any) => c.item != item)
-    saveUserFavorites(favorite)
-    setFavorite([...atTheMomentList])
+  useEffect(() => {
+    saveUserFavorites(savedItem).then(res => console.log('Save olundu', res))
+  }, [savedItem])
+
+  const deleteSave = (item: any) => {
+    const filtered = savedItem.filter(e => e.id !== item.id)
+    setSavedItem(filtered)
+    console.log('Oldugu ucun dusdu bura')
   }
 
   const render = ({ item }: any) => {
@@ -68,7 +69,7 @@ export default function Favorite() {
           </View>
           <View style={styles.favorite} >
 
-            <TouchableOpacity onPress={() => deleteSace(item)} >
+            <TouchableOpacity onPress={() => deleteSave(item)} >
               <SvgSave
                 style={{
                   stroke: "white",
@@ -92,7 +93,7 @@ export default function Favorite() {
           <Text style={{ fontWeight: "600", fontSize: 25, color: "white" }}>Saved</Text>
         </View>
         <FlatList
-          data={save}
+          data={savedItem}
           keyExtractor={(item, index) => item + index}
           renderItem={render}
           showsVerticalScrollIndicator={false}

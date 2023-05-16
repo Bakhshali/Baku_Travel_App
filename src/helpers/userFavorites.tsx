@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const saveUserFavorites = async (product:any) => {
     try {
         await AsyncStorage.setItem("userFavorites", JSON.stringify(product));
+        return product;
     } catch (error) {
         console.log(error);
     }

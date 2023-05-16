@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SearchItem } from '../../components/icons'
@@ -8,6 +8,8 @@ import SvgSave from '../../components/icons/Save'
 import SvgStar from '../../components/icons/Star'
 import SvgWatch from '../../components/icons/Watch'
 import { baseNetwork } from '../../network/Api'
+import { SavedContext } from '../../context/Saved'
+import { saveUserFavorites } from '../../helpers/userFavorites'
 
 export default function Home({ navigation }: any) {
   const [restaurant, setRestaurant] = useState<any>([])
@@ -15,6 +17,7 @@ export default function Home({ navigation }: any) {
   const [searchText, setSearchText] = useState<String>('')
   const [filteredRestaurant, setFilteredRestaurant] = useState<any>([])
   const [selectedCategory, setSelecetedCategory] = useState<any>([])
+  const { savedItem, setSavedItem } = useContext(SavedContext)
 
   useEffect(() => {
     const Network = new baseNetwork()
@@ -38,6 +41,22 @@ export default function Home({ navigation }: any) {
     }
   }, [searchText])
 
+  useEffect(() => {
+    saveUserFavorites(savedItem).then(res => console.log('Save olundu', res))
+  }, [savedItem])
+
+  const addToSave = (item: any) => {
+    const isExist = savedItem.find(e => e.id == item.id)
+    if (!isExist) {
+      setSavedItem([...savedItem, item])
+      console.log('Olmadigi ucun dusdu bura')
+      return
+    }
+    const filtered = savedItem.filter(e => e.id !== item.id)
+    setSavedItem(filtered)
+    console.log('Oldugu ucun dusdu bura')
+  }
+
   const addToSelecetedCategory = (item: any) => {
     try {
       setSelecetedCategory([item])
@@ -59,7 +78,7 @@ export default function Home({ navigation }: any) {
           </View>
         </View>
       </TouchableOpacity> : <TouchableOpacity onPress={() => addToSelecetedCategory(item)}>
-        <View style={{ marginLeft: 15, marginTop: 18,marginBottom:10, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
+        <View style={{ marginLeft: 15, marginTop: 18, marginBottom: 10, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
           <View style={{ flexDirection: "row", gap: 5, paddingRight: 10 }}>
             <SvgRestaurant />
             <Text style={{ color: "white" }} >{item.name}</Text>
@@ -95,7 +114,7 @@ export default function Home({ navigation }: any) {
               </View>
             </View>
           </View>
-          <View style={styles.favorite} >
+          <TouchableOpacity style={styles.favorite} onPress={() => addToSave(item)}>
             <SvgSave
               style={{
                 stroke: "white",
@@ -104,7 +123,7 @@ export default function Home({ navigation }: any) {
                 fill: "none"
               }} />
 
-          </View>
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     )

@@ -52,7 +52,7 @@ const ProductDetail = ({ route }: any) => {
           <Text style={{ fontSize: 18, color: 'white', fontFamily: "Outfit-Regular" }}>Map</Text>
         </View>
         <View style={{ alignItems: 'center' }}>
-          {/* <MapView
+          <MapView
             zoomEnabled={true}
             scrollEnabled={true}
             showsScale={true}
@@ -62,7 +62,6 @@ const ProductDetail = ({ route }: any) => {
               longitude: route.params.long,
               latitudeDelta: 0.0422,
               longitudeDelta: 0.0421,
-
             }}
           >
             <Marker
@@ -70,7 +69,7 @@ const ProductDetail = ({ route }: any) => {
               title="Marker Title"
               description="Marker Description"
             />
-          </MapView> */}
+          </MapView>
         </View>
         <View style={{ alignItems: 'center', marginTop: 10 }}>
           <TouchableOpacity>

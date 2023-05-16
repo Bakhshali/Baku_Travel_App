@@ -5,7 +5,7 @@ import { FirstLoginProvider } from './src/context/FirstLogin'
 import OpenScreen from './src/helpers/OpenScreen'
 
 export default function App() {
-  // AsyncStorage.clear()
+  AsyncStorage.clear()
   return (
     <NavigationContainer>
       <FirstLoginProvider>
