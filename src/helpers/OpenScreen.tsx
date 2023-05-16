@@ -6,6 +6,7 @@ import Start from '../navigations/stack/Start'
 import Main from '../navigations/tab/Main';
 import { FavoriteCategoryProvider } from '../context/FavoriteCategory';
 import { SavedProvider } from '../context/Saved';
+import { LocationProvider } from '../context/Location';
 
 export default function OpenScreen() {
 
@@ -38,9 +39,11 @@ export default function OpenScreen() {
       return <Start />
     else
       return <FavoriteCategoryProvider>
-        <SavedProvider>
-          <Main />
-        </SavedProvider>
+        <LocationProvider>
+          <SavedProvider>
+            <Main />
+          </SavedProvider>
+        </LocationProvider>
       </FavoriteCategoryProvider>
   }
 }

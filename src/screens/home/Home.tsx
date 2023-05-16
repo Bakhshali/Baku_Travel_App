@@ -13,6 +13,7 @@ import { baseNetwork } from '../../network/Api'
 import { SavedContext } from '../../context/Saved'
 import { getUserFavorites } from '../../helpers/userFavorites'
 import Loading from '../../components/Load'
+import { LocationContext } from '../../context/Location'
 
 export default function Home({ navigation }: any) {
 
@@ -20,10 +21,10 @@ export default function Home({ navigation }: any) {
   const [loadingRestaurant, setLoadingRestaurant] = useState<Boolean>(true)
   const [restaurant, setRestaurant] = useState<any>([])
   const [category, setCategory] = useState<any>([])
-  const [location, setLocation] = useState<any>([])
   const [address, setAddress] = useState<any>({})
   const [weather, setWeather] = useState<any>({})
   const { savedItem, setSavedItem } = useContext(SavedContext)
+  const { location, setLocation } = useContext<any>(LocationContext)
 
   useEffect(() => {
 
@@ -72,7 +73,7 @@ export default function Home({ navigation }: any) {
           Geolocations.getCurrentPosition(
             position => {
               setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-
+              console.log(location)
               axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
                 .then((res: any) => setAddress(res.data.address));
 
@@ -130,9 +131,29 @@ export default function Home({ navigation }: any) {
     </View>
   );
 
-
-
   const renderItem = ({ item }: any) => {
+    
+    function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
+      const R = 6371; // Earth's radius in km
+      const dLat = deg2rad(lat2 - lat1);
+      const dLon = deg2rad(lon2 - lon1);
+      console.log(dLat, dLon)
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+          Math.cos(deg2rad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c; // Distance in km
+      return d.toFixed(2);
+    }
+    
+    function deg2rad(deg: number) {
+      return deg * (Math.PI / 180);
+    }
+    const distanceInKm = distance(item.lat, item.long, location.latitude, location.longitude);
+
     let favorite = savedItem.find((c: any) => c.id == item.id)
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
@@ -147,7 +168,7 @@ export default function Home({ navigation }: any) {
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{item.km} km</Text>
+                <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />

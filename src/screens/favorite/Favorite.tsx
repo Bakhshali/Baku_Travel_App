@@ -8,12 +8,14 @@ import SvgStar from '../../components/icons/Star'
 import SvgWatch from '../../components/icons/Watch'
 import { SavedContext } from '../../context/Saved'
 import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
+import { LocationContext } from '../../context/Location'
 
 export default function Favorite() {
   const [save, setsave] = useState<any>([])
   const [favorite, setFavorite] = useState<any>([])
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const isFocused = useIsFocused()
+  const { location, setLocation } = useContext<any>(LocationContext)
 
   useEffect(() => {
     try {
@@ -42,6 +44,26 @@ export default function Favorite() {
   }
 
   const render = ({ item }: any) => {
+    function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
+      const R = 6371; // Earth's radius in km
+      const dLat = deg2rad(lat2 - lat1);
+      const dLon = deg2rad(lon2 - lon1);
+      console.log(dLat, dLon)
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+          Math.cos(deg2rad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c; // Distance in km
+      return d.toFixed(2);
+    }
+    
+    function deg2rad(deg: number) {
+      return deg * (Math.PI / 180);
+    }
+    const distanceInKm = distance(item.lat, item.long, location.latitude, location.longitude);
     return (
       <TouchableOpacity >
         <View style={styles.card} >
@@ -55,7 +77,7 @@ export default function Favorite() {
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{item.km} km</Text>
+                <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />

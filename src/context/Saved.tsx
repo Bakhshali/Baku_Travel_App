@@ -12,9 +12,6 @@ export const SavedContext = createContext<SavedProviderProps>({
 
 
 export const SavedProvider = ({ children }: any) => {
-
-
-
     //global state
     const [savedItem, setSavedItem] = useState<any[]>([])
 

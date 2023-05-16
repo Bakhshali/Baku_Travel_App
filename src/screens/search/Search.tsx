@@ -11,6 +11,7 @@ import { baseNetwork } from '../../network/Api'
 import { SavedContext } from '../../context/Saved'
 import { saveUserFavorites } from '../../helpers/userFavorites'
 import Loading from '../../components/Load'
+import { LocationContext } from '../../context/Location'
 
 export default function Home({ navigation }: any) {
   const [loading, setloading] = useState<Boolean>(true)
@@ -20,6 +21,7 @@ export default function Home({ navigation }: any) {
   const [filteredRestaurant, setFilteredRestaurant] = useState<any>([])
   const [selectedCategory, setSelecetedCategory] = useState<any>([])
   const { savedItem, setSavedItem } = useContext(SavedContext)
+  const { location, setLocation } = useContext<any>(LocationContext)
 
   useEffect(() => {
     const Network = new baseNetwork()
@@ -93,6 +95,27 @@ export default function Home({ navigation }: any) {
 
   const renderItem = ({ item }: any) => {
     const favorite = savedItem.find((c: any) => c.id == item.id)
+    function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
+      const R = 6371; // Earth's radius in km
+      const dLat = deg2rad(lat2 - lat1);
+      const dLon = deg2rad(lon2 - lon1);
+      console.log(dLat, dLon)
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+          Math.cos(deg2rad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c; // Distance in km
+      return d.toFixed(2);
+    }
+    
+    function deg2rad(deg: number) {
+      return deg * (Math.PI / 180);
+    }
+    
+    const distanceInKm = distance(item.lat, item.long, location.latitude, location.longitude);
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
         <View style={styles.card} >
@@ -106,7 +129,7 @@ export default function Home({ navigation }: any) {
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{item.km} km</Text>
+                <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />
