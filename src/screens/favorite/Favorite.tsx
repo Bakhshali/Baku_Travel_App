@@ -93,6 +93,7 @@ export default function Favorite() {
         </View>
         <FlatList
           data={save}
+          keyExtractor={(item, index) => item + index}
           renderItem={render}
           showsVerticalScrollIndicator={false}
         />
