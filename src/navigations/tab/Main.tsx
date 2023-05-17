@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
@@ -11,6 +12,7 @@ import SvgHome from '../../components/icons/Home'
 import SvgSearch from '../../components/icons/Search'
 import SvgSave from '../../components/icons/Save'
 import ProductDetail from '../../screens/detail/ProductDetail'
+import Setting from '../../screens/setting/Setting'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator();
@@ -58,6 +60,15 @@ export default function Main() {
                             height: 28,
                             fill: "none"
                         }} />
+                    )
+                }} />
+                <Tab.Screen name='SettingTabScreen' component={Setting} options={{
+                    tabBarStyle: {
+                        backgroundColor: "#1C1C1C"
+                    },
+                    tabBarShowLabel: false,
+                    tabBarIcon: ({ focused }) => (
+                        <AntDesign name='setting' size={32} color={focused ? "#E0783E" : "#494949"} />
                     )
                 }} />
             </Tab.Navigator>
