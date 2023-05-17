@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Geolocations from 'react-native-geolocation-service'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -27,17 +27,15 @@ export default function Home({ navigation }: any) {
   const { location, setLocation } = useContext<any>(LocationContext)
 
   useEffect(() => {
-
     const network = new baseNetwork()
-
     network.getAllRestaurant().then(resp => {
       setRestaurant(resp)
       setLoadingRestaurant(false)
     })
-
     getUserCategories().then(res => setCategory(res));
 
   }, [])
+
 
 
   const formatData = () => {
@@ -53,6 +51,8 @@ export default function Home({ navigation }: any) {
       console.log(error)
     }
   };
+
+
 
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -128,6 +128,8 @@ export default function Home({ navigation }: any) {
         horizontal
         keyExtractor={item => item.id.toString()}
         renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+
       />
     </View>
   );
@@ -167,15 +169,15 @@ export default function Home({ navigation }: any) {
           <View style={styles.cardDetail}>
             <Text style={{ color: "white", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
             <View style={styles.mainDetail}>
-              <View style={{ flexDirection: "row", gap: 7 }}>
+              <View style={{ flexDirection: "row", gap: 7,marginTop:5 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
                 <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
               </View>
-              <View style={{ flexDirection: "row", gap: 7 }}>
+              <View style={{ flexDirection: "row", gap: 7,marginTop:5 }}>
                 <SvgWatch />
                 <Text style={styles.textDetailStyle}>{item.startDate} - {item.endDate}</Text>
               </View>
-              <View style={{ flexDirection: "row", gap: 7 }}>
+              <View style={{ flexDirection: "row", gap: 7,marginTop:5 }}>
                 <SvgStar />
                 <Text style={styles.textDetailStyle}>{item.rate}</Text>
               </View>
@@ -245,15 +247,17 @@ export default function Home({ navigation }: any) {
           <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
         </View>
       </View>
-      <ScrollView horizontal>
-        <View>
+      {/* <ScrollView horizontal> */}
+        <View style={{marginBottom:100}}>
           <FlatList
             data={formatData()}
             keyExtractor={(item, index) => item.category + index}
             renderItem={renderCategory}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
           />
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </SafeAreaView>
   )
 }
@@ -268,7 +272,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     position: "absolute",
     right: 10,
-    top: 10
+    top: 10,
   },
   textDetailStyle: {
     fontSize: 13,
@@ -292,7 +296,7 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 20,
     marginTop: 20,
-    width: 280,
+    width: 280
   },
   imageStyle: {
     width: 280,

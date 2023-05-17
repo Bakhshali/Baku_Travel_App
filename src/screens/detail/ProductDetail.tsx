@@ -15,7 +15,7 @@ const ProductDetail = ({ route }: any) => {
       longitude: route.params.long,
       latitude: route.params.lat
     };
-     // Burada harita için bir konum belirtin veya göstermek istediğiniz bir adresi koordinatlara dönüştürün
+    // Burada harita için bir konum belirtin veya göstermek istediğiniz bir adresi koordinatlara dönüştürün
     const url = `https://www.google.com/maps/search/?api=1&query=${location}`;
 
     Linking.openURL(url);
@@ -38,7 +38,7 @@ const ProductDetail = ({ route }: any) => {
           <Text style={{ fontSize: 22, color: 'white', fontWeight: "900", fontFamily: "Outfit-Regular" }}>{route.params.name}</Text>
           <View style={{ flexDirection: "row", alignItems: "center", }}>
             <SvgStar width={14} />
-            <Text style={{ color: 'white', marginLeft: 5,fontSize:15 }}>{route.params.rate}</Text>
+            <Text style={{ color: 'white', marginLeft: 5, fontSize: 15 }}>{route.params.rate}</Text>
           </View>
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
@@ -47,22 +47,22 @@ const ProductDetail = ({ route }: any) => {
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
             <SvgWatch width={14} height={14} />
-            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular",fontSize:15 }}> {route.params.week}, {route.params.startDate} - {route.params.endDate}</Text>
+            <Text style={{ marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular", fontSize: 17 }}> {route.params.week}, {route.params.startDate} - {route.params.endDate}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <SvgPhone width={14} height={14} />
-            <Text style={{fontSize:15, marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.phone}</Text>
+            <Text style={{ fontSize: 17, marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.phone}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <SvgLocation width={14} height={14} />
-            <Text style={{fontSize:15, marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.address}</Text>
+            <Text style={{ fontSize: 17, marginLeft: 5, color: "#B9B9B9", fontFamily: "Outfit-Regular" }}>{route.params.address}</Text>
           </View>
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
           <Text style={{ fontSize: 18, color: 'white', fontFamily: "Outfit-Regular" }}>Map</Text>
         </View>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center',borderRadius: 10}}>
           <MapView
             zoomEnabled={true}
             scrollEnabled={true}
@@ -93,7 +93,7 @@ const ProductDetail = ({ route }: any) => {
                 justifyContent: 'center',
                 borderRadius: 10,
               }}>
-              <Text style={{ color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular" }}>Go to Map</Text>
+              <Text style={{ color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular",fontSize:17 }}>Go to Map</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -109,6 +109,5 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 200,
     marginTop: 10,
-    borderRadius: 15
   }
 })
