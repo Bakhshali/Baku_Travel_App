@@ -9,6 +9,7 @@ import SvgWatch from '../../components/icons/Watch'
 import { SavedContext } from '../../context/Saved'
 import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
 import { LocationContext } from '../../context/Location'
+import { useTranslation } from 'react-i18next'
 
 export default function Favorite({navigation}:any) {
   const [save, setsave] = useState<any>([])
@@ -16,6 +17,7 @@ export default function Favorite({navigation}:any) {
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const isFocused = useIsFocused()
   const { location, setLocation } = useContext<any>(LocationContext)
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     try {
@@ -112,7 +114,7 @@ export default function Favorite({navigation}:any) {
 
       <View>
         <View style={{ marginHorizontal: 20, marginTop: 25 }}>
-          <Text style={{ fontWeight: "600", fontSize: 25, color: "white" ,marginBottom:5}}>Saved</Text>
+          <Text style={{ fontWeight: "600", fontSize: 25, color: "white" ,marginBottom:5}}>{t('saved')}</Text>
         </View>
         <FlatList
           data={savedItem}

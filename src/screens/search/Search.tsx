@@ -12,6 +12,7 @@ import { SavedContext } from '../../context/Saved'
 import { saveUserFavorites } from '../../helpers/userFavorites'
 import Loading from '../../components/Load'
 import { LocationContext } from '../../context/Location'
+import { useTranslation } from 'react-i18next'
 
 export default function Home({ navigation }: any) {
   const [loading, setloading] = useState<Boolean>(true)
@@ -22,6 +23,7 @@ export default function Home({ navigation }: any) {
   const [selectedCategory, setSelecetedCategory] = useState<any>([])
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const { location, setLocation } = useContext<any>(LocationContext)
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const Network = new baseNetwork()
@@ -171,7 +173,7 @@ export default function Home({ navigation }: any) {
     loading ? <Loading /> : <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
       {
         <View style={styles.input}>
-          <TextInput onChangeText={setSearchText} placeholderTextColor="#B9B9B9" style={styles.inputStyle} placeholder='Search by items' />
+          <TextInput onChangeText={setSearchText} placeholderTextColor="#B9B9B9" style={styles.inputStyle} placeholder={t('searchbyitems')} />
           <SearchItem style={styles.inputSearch} />
         </View>
 

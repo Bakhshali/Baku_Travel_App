@@ -14,6 +14,9 @@ import { SavedContext } from '../../context/Saved'
 import { getUserFavorites } from '../../helpers/userFavorites'
 import Loading from '../../components/Load'
 import { LocationContext } from '../../context/Location'
+import { useTranslation } from 'react-i18next'
+import { LanguageContext } from '../../context/Language'
+import { getUserLanguage } from '../../helpers/userLanguage'
 
 export default function Home({ navigation }: any) {
 
@@ -25,6 +28,8 @@ export default function Home({ navigation }: any) {
   const [weather, setWeather] = useState<any>({})
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const { location, setLocation } = useContext<any>(LocationContext)
+  const {currentLanguage, setcurrentLanguage} = useContext(LanguageContext)
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const network = new baseNetwork()
@@ -34,9 +39,13 @@ export default function Home({ navigation }: any) {
     })
     getUserCategories().then(res => setCategory(res));
 
+    getUserLanguage().then(response => {
+      i18n.changeLanguage(response)
+      .then(_ => {
+          setcurrentLanguage(response);
+      })
+  })
   }, [])
-
-
 
   const formatData = () => {
     try {
@@ -122,7 +131,7 @@ export default function Home({ navigation }: any) {
 
   const renderCategory = ({ item }: any) => (
     <View>
-      <Text style={{ marginHorizontal: 20, marginTop: 5, fontSize: 18, color: "white" ,fontFamily:"Outfit-Bold"}} >{item.category} nearby</Text>
+      <Text style={{ marginHorizontal: 20, marginTop: 5, fontSize: 18, color: "white" ,fontFamily:"Outfit-Bold"}} >{item.category} {t('nearby')}</Text>
       <FlatList
         data={item.data}
         horizontal

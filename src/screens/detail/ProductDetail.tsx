@@ -46,7 +46,7 @@ const ProductDetail = ({ route }: any) => {
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
           <View>
-            <Text style={{ fontSize: 20, color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular" }}>Information</Text>
+            <Text style={{ fontSize: 20, color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular" }}>{t('information')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
             <SvgWatch width={14} height={14} />
@@ -96,7 +96,7 @@ const ProductDetail = ({ route }: any) => {
                 justifyContent: 'center',
                 borderRadius: 10,
               }}>
-              <Text style={{ color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular",fontSize:17 }}>Go to Map</Text>
+              <Text style={{ color: 'white', fontWeight: "500", fontFamily: "Outfit-Regular",fontSize:17 }}>{t('gotomap')}</Text>
             </View>
           </TouchableOpacity>
         </View>

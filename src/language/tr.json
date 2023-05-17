@@ -1,10 +1,11 @@
 {
     "translation": {
-        "nearby": "nearby",
-        "information":"Information",
-        "map":"Map",
-        "gotomap":"Go to map",
-        "searchbyitems":"Search by items",
-        "saved":"Saved"
+        "nearby": "yakınlıkda",
+        "information":"Hakkında",
+        "map":"Harita",
+        "gotomap":"Haritadan Gör",
+        "searchbyitems":"Ara..",
+        "saved":"Kaydedilenler",
+        "selectlanguage": "Uygulama Dilini Seç"
     }
 }

@@ -1,10 +1,11 @@
 {
     "translation": {
-        "nearby": "yaxınlğında",
+        "nearby": "yaxınlıqda",
         "information":"Haqqında",
         "map":"Xəritə",
-        "gotomap":"Xəritəyə Get",
-        "searchbyitems":"Bir şey axtar",
-        "saved":"Yadda Saxlanılanlar"
+        "gotomap":"Xəritədən Bax",
+        "searchbyitems":"Axtarış..",
+        "saved":"Yadda Saxlanılanlar",
+        "selectlanguage": "Tətbiq Dil Seçimi"
     }
 }
