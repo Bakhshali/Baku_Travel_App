@@ -6,9 +6,12 @@ import SvgWatch from '../../components/icons/Watch'
 import SvgPhone from '../../components/icons/Phone'
 import SvgLocation from '../../components/icons/Location'
 import MapView, { Marker } from 'react-native-maps';
+import { useTranslation } from 'react-i18next'
 
 
 const ProductDetail = ({ route }: any) => {
+
+  const { t, i18n } = useTranslation();
 
   const goMap = () => {
     const location = {
@@ -60,7 +63,7 @@ const ProductDetail = ({ route }: any) => {
           </View>
         </View>
         <View style={{ marginLeft: 20, marginTop: 20 }}>
-          <Text style={{ fontSize: 18, color: 'white', fontFamily: "Outfit-Regular" }}>Map</Text>
+          <Text style={{ fontSize: 18, color: 'white', fontFamily: "Outfit-Regular" }}>{t('map')}</Text>
         </View>
         <View style={{ alignItems: 'center',borderRadius: 10}}>
           <MapView
