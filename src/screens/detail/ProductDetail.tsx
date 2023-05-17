@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { baseNetwork } from '../../network/Api'
 import SvgStar from '../../components/icons/Star'
@@ -9,6 +9,17 @@ import MapView, { Marker } from 'react-native-maps';
 
 
 const ProductDetail = ({ route }: any) => {
+
+  const goMap = () => {
+    const location = {
+      longitude: route.params.long,
+      latitude: route.params.lat
+    };
+     // Burada harita için bir konum belirtin veya göstermek istediğiniz bir adresi koordinatlara dönüştürün
+    const url = `https://www.google.com/maps/search/?api=1&query=${location}`;
+
+    Linking.openURL(url);
+  }
 
   return (
     <View style={{ backgroundColor: '#1C1C1C', flex: 1 }} >
@@ -72,7 +83,7 @@ const ProductDetail = ({ route }: any) => {
           </MapView>
         </View>
         <View style={{ alignItems: 'center', marginTop: 10 }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={goMap} >
             <View
               style={{
                 width: 350,

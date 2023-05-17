@@ -79,8 +79,9 @@ export default function Home({ navigation }: any) {
 
               axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&exclude=hourly&appid=0134f46adb6106459889455578b2efc3`)
                 .then((res: any) => {
-                  setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main, weatherIcon: res.data.weather[0].icon })})
-                  setWeatherLoading(false)
+                  setWeather({ temp: res.data.main.temp, condition: res.data.weather[0].main, weatherIcon: res.data.weather[0].icon })
+                })
+              setWeatherLoading(false)
             },
             error => {
               // See error code charts below.
@@ -121,7 +122,7 @@ export default function Home({ navigation }: any) {
 
   const renderCategory = ({ item }: any) => (
     <View>
-      <Text style={{ marginHorizontal: 20, marginTop: 10, fontSize: 17, color: "white" }} >{item.category} nearby</Text>
+      <Text style={{ marginHorizontal: 20, marginTop: 5, fontSize: 18, color: "white" ,fontFamily:"Outfit-Bold"}} >{item.category} nearby</Text>
       <FlatList
         data={item.data}
         horizontal
@@ -132,7 +133,7 @@ export default function Home({ navigation }: any) {
   );
 
   const renderItem = ({ item }: any) => {
-    
+
     function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
       const R = 6371; // Earth's radius in km
       const dLat = deg2rad(lat2 - lat1);
@@ -141,14 +142,14 @@ export default function Home({ navigation }: any) {
       const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)) *
-          Math.cos(deg2rad(lat2)) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const d = R * c; // Distance in km
       return d.toFixed(2);
     }
-    
+
     function deg2rad(deg: number) {
       return deg * (Math.PI / 180);
     }
@@ -208,32 +209,52 @@ export default function Home({ navigation }: any) {
       </TouchableOpacity>
     )
   }
+
+  const weatherIcon = () => {
+    switch (weather.condition) {
+      case "Clouds":
+        return "☁️"
+        break;
+      case "Clear":
+        return "☀️"
+        break;
+      case "Rain":
+        return "🌧️"
+        break;
+      case "Drizzle":
+        return "🌦️"
+        break;
+      case "Snow":
+        return "❄️"
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
     loadingRestaurant || loadingWeather ? <Loading /> : <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
 
-    <View style={styles.headerMain}>
-      <View style={styles.location}>
-        <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
-        <Text style={styles.locationText}>{address.city}, {address.country}</Text>
+      <View style={styles.headerMain}>
+        <View style={styles.location}>
+          <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
+          <Text style={styles.locationText}>{address.city}, {address.country}</Text>
+        </View>
+        <View style={styles.weather}>
+          <Text style={{fontSize:17}} >{weatherIcon()}</Text>
+          <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
+        </View>
       </View>
-      <View style={styles.weather}>
-        {/* <SvgWeather style={{ marginLeft: 5 }} /> */}
-        <Image style={{ width: 40, height: 40 }}
-          source={{ uri: `http://openweathermap.org/img/wn/${weather.weatherIcon}@4x.png` }}
-        />
-        <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
-      </View>
-    </View>
-    <ScrollView horizontal>
-      <View>
-        <FlatList
-          data={formatData()}
-          keyExtractor={(item, index) => item.category + index}
-          renderItem={renderCategory}
-        />
-      </View>
-    </ScrollView>
-  </SafeAreaView>
+      <ScrollView horizontal>
+        <View>
+          <FlatList
+            data={formatData()}
+            keyExtractor={(item, index) => item.category + index}
+            renderItem={renderCategory}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -256,8 +277,7 @@ const styles = StyleSheet.create({
   },
   mainDetail: {
     flexDirection: "row",
-    gap: 30,
-    marginTop: 10
+    gap: 25,
   },
   cardDetail: {
     // backgroundColor:"red",
@@ -265,7 +285,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#353535",
     borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10
+    borderBottomRightRadius: 10,
+    marginBottom:20
   },
 
   card: {
@@ -284,17 +305,17 @@ const styles = StyleSheet.create({
   },
   weather: {
     backgroundColor: "#262626",
-    width: 75,
+    width: 80,
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    justifyContent:"space-evenly",
     borderRadius: 12,
   },
   headerMain: {
     // marginHorizontal: 10,
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 10
   },
   location: {

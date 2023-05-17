@@ -10,7 +10,7 @@ import { SavedContext } from '../../context/Saved'
 import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
 import { LocationContext } from '../../context/Location'
 
-export default function Favorite() {
+export default function Favorite({navigation}:any) {
   const [save, setsave] = useState<any>([])
   const [favorite, setFavorite] = useState<any>([])
   const { savedItem, setSavedItem } = useContext(SavedContext)
@@ -64,8 +64,9 @@ export default function Favorite() {
       return deg * (Math.PI / 180);
     }
     const distanceInKm = distance(item.lat, item.long, location.latitude, location.longitude);
+    
     return (
-      <TouchableOpacity >
+      <TouchableOpacity onPress={()=>navigation.navigate("ProductDetail",item)} >
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
@@ -112,7 +113,7 @@ export default function Favorite() {
 
       <View>
         <View style={{ marginHorizontal: 20, marginTop: 25 }}>
-          <Text style={{ fontWeight: "600", fontSize: 25, color: "white" }}>Saved</Text>
+          <Text style={{ fontWeight: "600", fontSize: 25, color: "white" ,marginBottom:5}}>Saved</Text>
         </View>
         <FlatList
           data={savedItem}

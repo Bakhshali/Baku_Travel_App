@@ -8,42 +8,42 @@ const data = [
   {
     id: "1",
     name: 'Restaurant',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🍽️"
   },
   {
     id: "2",
     name: 'Sight',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🏛️"
   },
   {
     id: "3",
     name: 'Shop',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🛍️"
   },
   {
     id: "4",
     name: 'Museum',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🖼️️️"
   },
   {
     id: "5",
     name: 'Hotel',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🛏️"
   },
   {
     id: "6",
     name: 'Club',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🍺"
   },
   {
     id: "7",
     name: 'Park',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🏞️"
   },
   {
     id: "8",
     name: 'Hospital',
-    image: require('../../assets/images/onboarding/Hospital.png')
+    image: "🏨"
   }
 ]
 
@@ -81,14 +81,14 @@ export default function CategoryList({ navigation }: any) {
     if (isExistCategory) {
       return (
         <TouchableOpacity style={[styles.item, { borderColor: 'white', }]} onPress={() => addToFavoriteCategory(item)}>
-          <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
+          <Text style={{fontSize:40,marginBottom:5}} >{item.image}</Text>
           <Text style={styles.itemText}>{item.name}</Text>
         </TouchableOpacity>
       )
     }
     return (
       <TouchableOpacity style={[styles.item, { borderColor: '#494949', }]} onPress={() => addToFavoriteCategory(item)}>
-        <Image style={{ width: 36, height: 44, marginBottom: 12 }} source={item.image} />
+        <Text style={{fontSize:40,marginBottom:5}} >{item.image}</Text>
         <Text style={styles.itemText}>{item.name}</Text>
       </TouchableOpacity>
     )
@@ -110,9 +110,12 @@ export default function CategoryList({ navigation }: any) {
           numColumns={2}
         />
       </View>
+
+     {
+      category.length>=2&&
       <TouchableOpacity style={styles.btn} onPress={next}>
         <Text style={styles.btnText}>Next</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   )
 }
@@ -150,8 +153,9 @@ const styles = StyleSheet.create({
   btnText: {
     marginVertical: 16,
     fontFamily: 'Outfit-Regular',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '500',
     textAlign: 'center',
+    color:"white"
   }
 })
