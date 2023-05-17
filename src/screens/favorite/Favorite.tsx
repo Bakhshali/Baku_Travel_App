@@ -48,7 +48,6 @@ export default function Favorite({navigation}:any) {
       const R = 6371; // Earth's radius in km
       const dLat = deg2rad(lat2 - lat1);
       const dLon = deg2rad(lon2 - lon1);
-      console.log(dLat, dLon)
       const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)) *
