@@ -20,8 +20,9 @@ const ProductDetail = ({ route }: any) => {
       longitude: route.params.long,
       latitude: route.params.lat
     };
-    // Burada harita için bir konum belirtin veya göstermek istediğiniz bir adresi koordinatlara dönüştürün
-    const url = `https://www.google.com/maps/search/?api=1&query=${location}`;
+    console.log(location.latitude)
+    const url = `https://maps.google.com/?q=${location.latitude},${location.longitude}`;
+    console.log(url)
 
     Linking.openURL(url);
   }
