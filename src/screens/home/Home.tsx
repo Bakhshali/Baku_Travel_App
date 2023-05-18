@@ -270,7 +270,7 @@ export default function Home({ navigation }: any) {
         </View>
         <View style={styles.weather}>
           <Text style={{ fontSize: 17 }} >{weatherIcon()}</Text>
-          <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
+          <Text style={styles.weatherText}>{Math.floor(weather.temp)} ℃</Text>
         </View>
       </View>
       {/* <ScrollView horizontal> */}

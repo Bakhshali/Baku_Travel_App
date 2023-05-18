@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -13,11 +13,13 @@ import SvgSearch from '../../components/icons/Search'
 import SvgSave from '../../components/icons/Save'
 import ProductDetail from '../../screens/detail/ProductDetail'
 import Setting from '../../screens/setting/Setting'
+import { SettingsContext } from '../../context/SettingsContext'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator();
 
 export default function Main() {
+    const { darkMode, setDarkMode } = useContext<any>(SettingsContext)
 
     const TabMain = () => {
         return (
@@ -28,34 +30,34 @@ export default function Main() {
             }>
                 <Tab.Screen name='HomeTabScreen' component={Home} options={{
                     tabBarStyle: {
-                        backgroundColor: "#1C1C1C"
+                        backgroundColor: darkMode ? "#1C1C1C" :"white"
                     },
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused }) => (
                         <SvgHome style={{
-                            stroke: focused ? "#E0783E" : "#494949",
+                            stroke: focused ? "#E0783E" : darkMode ? "#494949":"black",
                         }} />
                     )
                 }} />
                 <Tab.Screen name='SearchTabScreen' component={Search} options={{
                     tabBarStyle: {
-                        backgroundColor: "#1C1C1C"
+                        backgroundColor: darkMode ? "#1C1C1C" :"white"
                     },
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused }) => (
                         <SvgSearch style={{
-                            stroke: focused ? "#E0783E" : "#494949",
+                            stroke: focused ? "#E0783E" : darkMode? "#494949":"black",
                         }} />
                     )
                 }} />
                 <Tab.Screen name='FavoriteTabScreen' component={Favorite} options={{
                     tabBarStyle: {
-                        backgroundColor: "#1C1C1C"
+                        backgroundColor: darkMode ? "#1C1C1C" :"white"
                     },
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused }) => (
                         <SvgSave style={{
-                            stroke: focused ? "#E0783E" : "#494949",
+                            stroke: focused ? "#E0783E" : darkMode? "#494949":"black",
                             width: 28,
                             height: 28,
                             fill: "none"
@@ -64,11 +66,11 @@ export default function Main() {
                 }} />
                 <Tab.Screen name='SettingTabScreen' component={Setting} options={{
                     tabBarStyle: {
-                        backgroundColor: "#1C1C1C"
+                        backgroundColor: darkMode ? "#1C1C1C" :"white"
                     },
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused }) => (
-                        <AntDesign name='setting' size={32} color={focused ? "#E0783E" : "#494949"} />
+                        <AntDesign name='setting' size={32} color={focused ? "#E0783E" : darkMode? "#494949":"black"} />
                     )
                 }} />
             </Tab.Navigator>
