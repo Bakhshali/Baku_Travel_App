@@ -17,6 +17,7 @@ import { LocationContext } from '../../context/Location'
 import { useTranslation } from 'react-i18next'
 import { LanguageContext } from '../../context/Language'
 import { getUserLanguage } from '../../helpers/userLanguage'
+import { SettingsContext } from '../../context/SettingsContext'
 
 export default function Home({ navigation }: any) {
 
@@ -28,7 +29,12 @@ export default function Home({ navigation }: any) {
   const [weather, setWeather] = useState<any>({})
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const { location, setLocation } = useContext<any>(LocationContext)
-  const {currentLanguage, setcurrentLanguage} = useContext(LanguageContext)
+  const { darkMode, setDarkMode } = useContext<any>(SettingsContext)
+
+
+
+
+  const { currentLanguage, setcurrentLanguage } = useContext(LanguageContext)
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -41,10 +47,10 @@ export default function Home({ navigation }: any) {
 
     getUserLanguage().then(response => {
       i18n.changeLanguage(response)
-      .then(_ => {
+        .then(_ => {
           setcurrentLanguage(response);
-      })
-  })
+        })
+    })
   }, [])
 
   const formatData = () => {
@@ -131,7 +137,7 @@ export default function Home({ navigation }: any) {
 
   const renderCategory = ({ item }: any) => (
     <View>
-      <Text style={{ marginHorizontal: 20, marginTop: 5, fontSize: 18, color: "white" ,fontFamily:"Outfit-Bold"}} >{item.category} {t('nearby')}</Text>
+      <Text style={{ marginHorizontal: 20, marginTop: 5, fontSize: 18, color: darkMode? "white":"black", fontFamily: "Outfit-Bold" }} >{item.category} {t('nearby')}</Text>
       <FlatList
         data={item.data}
         horizontal
@@ -175,19 +181,31 @@ export default function Home({ navigation }: any) {
             />
           </View>
           <View style={styles.cardDetail}>
-            <Text style={{ color: "white", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
+            <Text style={{ color: darkMode? "white":"black", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
             <View style={styles.mainDetail}>
-              <View style={{ flexDirection: "row", gap: 7,marginTop:5 }}>
+              <View style={{ flexDirection: "row", gap: 7, marginTop: 5 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{distanceInKm} km</Text>
               </View>
-              <View style={{ flexDirection: "row", gap: 7,marginTop:5 }}>
+              <View style={{ flexDirection: "row", gap: 7, marginTop: 5 }}>
                 <SvgWatch />
-                <Text style={styles.textDetailStyle}>{item.startDate} - {item.endDate}</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{item.startDate} - {item.endDate}</Text>
               </View>
-              <View style={{ flexDirection: "row", gap: 7,marginTop:5 }}>
+              <View style={{ flexDirection: "row", gap: 7, marginTop: 5 }}>
                 <SvgStar />
-                <Text style={styles.textDetailStyle}>{item.rate}</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{item.rate}</Text>
               </View>
             </View>
           </View>
@@ -243,7 +261,7 @@ export default function Home({ navigation }: any) {
   }
 
   return (
-    loadingRestaurant || loadingWeather ? <Loading /> : <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
+    loadingRestaurant || loadingWeather ? <Loading /> : <SafeAreaView style={{ backgroundColor: darkMode ? "#1c1c1c" : "white", flex: 1 }}>
 
       <View style={styles.headerMain}>
         <View style={styles.location}>
@@ -251,20 +269,20 @@ export default function Home({ navigation }: any) {
           <Text style={styles.locationText}>{address.city}, {address.country}</Text>
         </View>
         <View style={styles.weather}>
-          <Text style={{fontSize:17}} >{weatherIcon()}</Text>
+          <Text style={{ fontSize: 17 }} >{weatherIcon()}</Text>
           <Text style={styles.weatherText}>+{Math.floor(weather.temp)}</Text>
         </View>
       </View>
       {/* <ScrollView horizontal> */}
-        <View style={{marginBottom:100}}>
-          <FlatList
-            data={formatData()}
-            keyExtractor={(item, index) => item.category + index}
-            renderItem={renderCategory}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
+      <View style={{ marginBottom: 100 }}>
+        <FlatList
+          data={formatData()}
+          keyExtractor={(item, index) => item.category + index}
+          renderItem={renderCategory}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
       {/* </ScrollView> */}
     </SafeAreaView>
   )
@@ -292,13 +310,12 @@ const styles = StyleSheet.create({
     gap: 25,
   },
   cardDetail: {
-    // backgroundColor:"red",
     padding: 10,
     borderWidth: 1,
     borderColor: "#353535",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    marginBottom:20
+    marginBottom: 20
   },
 
   card: {
@@ -320,7 +337,7 @@ const styles = StyleSheet.create({
     width: 80,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:"space-evenly",
+    justifyContent: "space-evenly",
     borderRadius: 12,
   },
   headerMain: {

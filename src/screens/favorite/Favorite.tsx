@@ -10,14 +10,18 @@ import { SavedContext } from '../../context/Saved'
 import { getUserFavorites, saveUserFavorites } from '../../helpers/userFavorites'
 import { LocationContext } from '../../context/Location'
 import { useTranslation } from 'react-i18next'
+import { SettingsContext } from '../../context/SettingsContext'
 
-export default function Favorite({navigation}:any) {
+
+export default function Favorite({ navigation }: any) {
   const [save, setsave] = useState<any>([])
   const [favorite, setFavorite] = useState<any>([])
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const isFocused = useIsFocused()
   const { location, setLocation } = useContext<any>(LocationContext)
   const { t, i18n } = useTranslation();
+  const { darkMode, setDarkMode } = useContext<any>(SettingsContext)
+
 
   useEffect(() => {
     try {
@@ -53,21 +57,21 @@ export default function Favorite({navigation}:any) {
       const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)) *
-          Math.cos(deg2rad(lat2)) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const d = R * c; // Distance in km
       return d.toFixed(2);
     }
-    
+
     function deg2rad(deg: number) {
       return deg * (Math.PI / 180);
     }
     const distanceInKm = distance(item.lat, item.long, location.latitude, location.longitude);
-    
+
     return (
-      <TouchableOpacity onPress={()=>navigation.navigate("ProductDetail",item)} >
+      <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)} >
         <View style={styles.card} >
           <View>
             <Image style={styles.imageStyle}
@@ -75,19 +79,31 @@ export default function Favorite({navigation}:any) {
             />
           </View>
           <View style={styles.cardDetail}>
-            <Text style={{ color: "white", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
+            <Text style={{ color: darkMode? "white":"black", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{distanceInKm} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />
-                <Text style={styles.textDetailStyle}>{item.startDate} - {item.endDate}</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{item.startDate} - {item.endDate}</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgStar />
-                <Text style={styles.textDetailStyle}>{item.rate}</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{item.rate}</Text>
               </View>
             </View>
           </View>
@@ -110,11 +126,11 @@ export default function Favorite({navigation}:any) {
   }
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: darkMode ? "#1c1c1c" : "white", flex: 1 }}>
 
       <View>
         <View style={{ marginHorizontal: 20, marginTop: 25 }}>
-          <Text style={{ fontWeight: "600", fontSize: 25, color: "white" ,marginBottom:5}}>{t('saved')}</Text>
+          <Text style={{ fontWeight: "600", fontSize: 25, color: darkMode ? "white" : "black", marginBottom: 5 }}>{t('saved')}</Text>
         </View>
         <FlatList
           data={savedItem}

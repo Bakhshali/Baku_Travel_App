@@ -8,6 +8,7 @@ import { FavoriteCategoryProvider } from '../context/FavoriteCategory';
 import { SavedProvider } from '../context/Saved';
 import { LocationProvider } from '../context/Location';
 import { LanguageProvider } from '../context/Language';
+import { SettingsProvider } from '../context/SettingsContext';
 
 export default function OpenScreen() {
 
@@ -43,7 +44,9 @@ export default function OpenScreen() {
         <LocationProvider>
           <SavedProvider>
             <LanguageProvider>
-            <Main />
+              <SettingsProvider>
+                <Main />
+              </SettingsProvider>
             </LanguageProvider>
           </SavedProvider>
         </LocationProvider>

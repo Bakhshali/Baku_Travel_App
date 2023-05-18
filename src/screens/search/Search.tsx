@@ -13,6 +13,7 @@ import { saveUserFavorites } from '../../helpers/userFavorites'
 import Loading from '../../components/Load'
 import { LocationContext } from '../../context/Location'
 import { useTranslation } from 'react-i18next'
+import { SettingsContext } from '../../context/SettingsContext'
 
 export default function Home({ navigation }: any) {
   const [loading, setloading] = useState<Boolean>(true)
@@ -24,6 +25,8 @@ export default function Home({ navigation }: any) {
   const { savedItem, setSavedItem } = useContext(SavedContext)
   const { location, setLocation } = useContext<any>(LocationContext)
   const { t, i18n } = useTranslation();
+  const { darkMode, setDarkMode } = useContext<any>(SettingsContext)
+
 
   useEffect(() => {
     const Network = new baseNetwork()
@@ -78,7 +81,7 @@ export default function Home({ navigation }: any) {
     const isExist = selectedCategory.find((e: any) => e.id == item.id)
     return (
       isExist ? <TouchableOpacity onPress={() => addToSelecetedCategory(item)}>
-        <View style={{ backgroundColor: '#E0783E', marginLeft: 15, marginTop: 18, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
+        <View style={{ backgroundColor: '#E0783E', marginLeft: 15, marginTop: 18, borderWidth: 1, borderColor: darkMode ? "#404040" : "#E0783E", padding: 5, borderRadius: 7 }}>
           <View style={{ flexDirection: "row", gap: 5, paddingRight: 10 }}>
             <SvgRestaurant />
             <Text style={{ color: "white" }} >{item.name}</Text>
@@ -88,7 +91,7 @@ export default function Home({ navigation }: any) {
         <View style={{ marginLeft: 15, marginTop: 18, marginBottom: 10, borderWidth: 1, borderColor: "#404040", padding: 5, borderRadius: 7 }}>
           <View style={{ flexDirection: "row", gap: 5, paddingRight: 10 }}>
             <SvgRestaurant />
-            <Text style={{ color: "white" }} >{item.name}</Text>
+            <Text style={{ color: darkMode ? "white" : "black" }} >{item.name}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -104,18 +107,18 @@ export default function Home({ navigation }: any) {
       const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)) *
-          Math.cos(deg2rad(lat2)) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const d = R * c; // Distance in km
       return d.toFixed(2);
     }
-    
+
     function deg2rad(deg: number) {
       return deg * (Math.PI / 180);
     }
-    
+
     const distanceInKm = distance(item.lat, item.long, location.latitude, location.longitude);
     return (
       <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", item)}>
@@ -126,42 +129,54 @@ export default function Home({ navigation }: any) {
             />
           </View>
           <View style={styles.cardDetail}>
-            <Text style={{ color: "white", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
+            <Text style={{ color: darkMode? "white":"black", fontSize: 20, fontWeight: "600" }}>{item.name}</Text>
             <View style={styles.mainDetail}>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgLocation style={{ width: 16, height: 18 }} />
-                <Text style={styles.textDetailStyle}>{distanceInKm} km</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{distanceInKm} km</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgWatch />
-                <Text style={styles.textDetailStyle}>{item.startDate} - {item.endDate}</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{item.startDate} - {item.endDate}</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 7 }}>
                 <SvgStar />
-                <Text style={styles.textDetailStyle}>{item.rate}</Text>
+                <Text style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: darkMode ? "white" : "black"
+                }}>{item.rate}</Text>
               </View>
             </View>
           </View>
           <TouchableOpacity style={styles.favorite} onPress={() => addToSave(item)}>
-          {
-                favorite ?
-                  <SvgSave
-                    style={{
-                      stroke: "white",
-                      width: 20,
-                      height: 20,
-                      fill: "white"
-
-                    }} />
-                  :
-                  <SvgSave style={{
+            {
+              favorite ?
+                <SvgSave
+                  style={{
                     stroke: "white",
                     width: 20,
                     height: 20,
-                    fill: "none"
+                    fill: "white"
 
                   }} />
-              }
+                :
+                <SvgSave style={{
+                  stroke: "white",
+                  width: 20,
+                  height: 20,
+                  fill: "none"
+
+                }} />
+            }
 
           </TouchableOpacity>
         </View>
@@ -170,7 +185,7 @@ export default function Home({ navigation }: any) {
   }
 
   return (
-    loading ? <Loading /> : <SafeAreaView style={{ backgroundColor: "#1c1c1c", flex: 1 }}>
+    loading ? <Loading /> : <SafeAreaView style={{ backgroundColor: darkMode ? "#1c1c1c" : "white", flex: 1 }}>
       {
         <View style={styles.input}>
           <TextInput onChangeText={setSearchText} placeholderTextColor="#B9B9B9" style={styles.inputStyle} placeholder={t('searchbyitems')} />
