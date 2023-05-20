@@ -266,7 +266,7 @@ export default function Home({ navigation }: any) {
       <View style={styles.headerMain}>
         <View style={styles.location}>
           <SvgLocation style={{ marginLeft: 8, width: 20, height: 20 }} />
-          <Text style={styles.locationText}>{address.city}, {address.country}</Text>
+          <Text style={styles.locationText}>Bakı, {address.country}</Text>
         </View>
         <View style={styles.weather}>
           <Text style={{ fontSize: 17 }} >{weatherIcon()}</Text>
